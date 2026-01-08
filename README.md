@@ -106,8 +106,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ### Environment Variables Reference
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `POSTGRES_URL` | Vercel Postgres connection string | Yes |
+| Variable       | Description                       | Required |
+| -------------- | --------------------------------- | -------- |
+| `POSTGRES_URL` | Vercel Postgres connection string | Yes      |
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

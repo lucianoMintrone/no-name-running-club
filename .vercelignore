@@ -1,0 +1,5 @@
+# Local environment files - Vercel uses dashboard env vars
+.env
+.env.local
+.env.production
+.env*.local
