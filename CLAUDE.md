@@ -30,7 +30,7 @@ This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQ
 - `src/lib/auth.ts` - NextAuth.js config with Prisma adapter
 - `src/lib/auth.config.ts` - Edge-compatible auth config (for middleware)
 - `src/services/` - Business logic services (Clean Architecture interactors)
-- `src/generated/prisma/` - Generated Prisma client (do not edit)
+- `node_modules/.prisma/client/` - Generated Prisma client (do not edit)
 - `prisma/schema.prisma` - Database schema definition
 
 ### Authentication
@@ -40,7 +40,7 @@ This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQ
 ### Database
 - **Local**: PostgreSQL at `localhost:5432/no_name_running_club`
 - **Production**: Vercel Postgres (configured via `POSTGRES_URL` env var)
-- Prisma ORM with type-safe client generated to `src/generated/prisma/`
+- Prisma ORM with type-safe client (import from `@prisma/client`)
 
 ### Environment Files
 - `.env` - Local development (not versioned)
