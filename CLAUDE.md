@@ -14,6 +14,11 @@ yarn db:studio    # Open Prisma Studio GUI
 yarn db:generate  # Generate Prisma client
 ```
 
+## URLs
+
+- **Production**: https://no-name-running-club.vercel.app/
+- **Local**: http://localhost:3000
+
 ## Architecture
 
 This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQL.
@@ -21,8 +26,15 @@ This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQ
 ### Key Directories
 - `src/app/` - Next.js App Router pages and API routes
 - `src/lib/prisma.ts` - Prisma client singleton (use this for all DB access)
+- `src/lib/auth.ts` - NextAuth.js config with Prisma adapter
+- `src/lib/auth.config.ts` - Edge-compatible auth config (for middleware)
+- `src/services/` - Business logic services (Clean Architecture interactors)
 - `src/generated/prisma/` - Generated Prisma client (do not edit)
 - `prisma/schema.prisma` - Database schema definition
+
+### Authentication
+- NextAuth.js v5 with Google OAuth provider
+- `src/services/UserService.ts` - User creation/lookup logic (extend here for onboarding flows)
 
 ### Database
 - **Local**: PostgreSQL at `localhost:5432/no_name_running_club`
