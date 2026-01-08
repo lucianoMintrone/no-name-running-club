@@ -19,24 +19,28 @@ export class UserService {
   /**
    * Creates a new user in the database.
    * This is the central place for user creation logic.
-   * Add any additional business logic here (e.g., sending welcome emails,
-   * creating default settings, analytics tracking, etc.)
+   * Automatically enrolls the user in the current challenge if one exists.
    */
   static async createUser(input: CreateUserInput): Promise<User> {
+    const currentChallenge = await prisma.challenge.findFirst({
+      where: { current: true },
+    });
+
     const user = await prisma.user.create({
       data: {
         email: input.email,
         name: input.name,
         image: input.image,
         emailVerified: input.emailVerified,
+        ...(currentChallenge && {
+          userChallenges: {
+            create: {
+              challengeId: currentChallenge.id,
+            },
+          },
+        }),
       },
     });
-
-    // Future: Add additional user creation logic here
-    // - Send welcome email
-    // - Create default user settings
-    // - Track analytics event
-    // - Initialize user preferences
 
     return user;
   }
