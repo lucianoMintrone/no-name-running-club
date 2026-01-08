@@ -56,7 +56,7 @@ export default async function Home() {
 
       <main className="mx-auto max-w-4xl px-6 py-8">
         {session?.user && challengeTitle ? (
-          <ChallengeCard title={challengeTitle} totalStamps={30} />
+          <ChallengeCard title={challengeTitle} />
         ) : (
           <>
             <header className="mb-16 pt-8 text-center">
