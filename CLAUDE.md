@@ -5,13 +5,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-yarn dev          # Start development server
-yarn build        # Build for production (runs prisma generate first)
-yarn lint         # Run ESLint
-yarn db:push      # Push Prisma schema to database (no migration)
-yarn db:migrate   # Create and apply migrations
-yarn db:studio    # Open Prisma Studio GUI
-yarn db:generate  # Generate Prisma client
+yarn dev               # Start development server
+yarn build             # Build for production (runs migrations + prisma generate)
+yarn lint              # Run ESLint
+yarn db:migrate        # Create and apply migrations (development)
+yarn db:migrate:deploy # Apply pending migrations (production)
+yarn db:studio         # Open Prisma Studio GUI
+yarn db:generate       # Generate Prisma client
+yarn db:setup-challenges # Seed challenge data
 ```
 
 ## URLs

@@ -16,9 +16,41 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prisma Studio
+
+View and edit your database with a visual GUI:
+
+```bash
+# Local database
+yarn db:studio
+
+# Production database
+DATABASE_URL="your_production_connection_string" yarn db:studio
+```
+
+This opens Prisma Studio at [http://localhost:5555](http://localhost:5555).
+
+### Database Commands
+
+```bash
+# Development
+yarn db:migrate         # Create and apply migrations
+yarn db:studio          # Open Prisma Studio GUI
+yarn db:generate        # Regenerate Prisma client
+
+# Production
+yarn db:migrate:deploy  # Apply pending migrations (safe for CI/CD)
+```
+
+### Production Migration Workflow
+
+Migrations run automatically on every Vercel deploy (via the build script).
+
+1. Create migrations locally with `yarn db:migrate`
+2. Commit the migration files in `prisma/migrations/`
+3. Push to deploy — migrations apply automatically during build
 
 ## Learn More
 
