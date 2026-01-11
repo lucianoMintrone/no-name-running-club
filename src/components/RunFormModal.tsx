@@ -8,6 +8,7 @@ interface RunFormModalProps {
   onClose: () => void;
   position: number;
   units: string;
+  isEditing?: boolean;
   onRunCreated: () => void;
 }
 
@@ -16,6 +17,7 @@ export function RunFormModal({
   onClose,
   position,
   units,
+  isEditing = false,
   onRunCreated,
 }: RunFormModalProps) {
   // Use local date to avoid timezone issues
@@ -25,11 +27,28 @@ export function RunFormModal({
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(30);
   const [distance, setDistance] = useState("");
+  const [runUnits, setRunUnits] = useState(units);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const distanceUnit = units === "metric" ? "kms" : "miles";
+  const distanceUnit = runUnits === "metric" ? "kms" : "miles";
+  const paceUnit = runUnits === "metric" ? "min/km" : "min/mile";
   const totalMinutes = hours * 60 + minutes;
+
+  // Calculate pace
+  const distanceValue = parseFloat(distance) || 0;
+  const pace =
+    distanceValue > 0 ? totalMinutes / distanceValue : 0;
+  const paceMinutes = Math.floor(pace);
+  const paceSeconds = Math.round((pace - paceMinutes) * 60);
+  const paceFormatted =
+    distanceValue > 0
+      ? `${paceMinutes}'${paceSeconds.toString().padStart(2, "0")}"`
+      : "--";
+
+  const handleUnitsToggle = () => {
+    setRunUnits(runUnits === "imperial" ? "metric" : "imperial");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,8 +59,7 @@ export function RunFormModal({
       return;
     }
 
-    const distanceValue = parseFloat(distance);
-    if (isNaN(distanceValue) || distanceValue <= 0) {
+    if (distanceValue <= 0) {
       setError("Distance must be greater than 0");
       return;
     }
@@ -52,7 +70,7 @@ export function RunFormModal({
           date,
           durationInMinutes: totalMinutes,
           distance: distanceValue,
-          units: units as "imperial" | "metric",
+          units: runUnits as "imperial" | "metric",
           position,
         });
         onRunCreated();
@@ -89,10 +107,41 @@ export function RunFormModal({
           </svg>
         </button>
 
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            Log Run #{position}
+            {isEditing ? "Edit" : "Add"} Run #{position}
           </h2>
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-xs ${runUnits === "imperial" ? "font-medium text-zinc-900 dark:text-zinc-50" : "text-zinc-400"}`}
+            >
+              mi
+            </span>
+            <button
+              type="button"
+              onClick={handleUnitsToggle}
+              className={`relative h-5 w-9 rounded-full transition-colors ${
+                runUnits === "metric"
+                  ? "bg-emerald-500"
+                  : "bg-zinc-300 dark:bg-zinc-600"
+              }`}
+              role="switch"
+              aria-checked={runUnits === "metric"}
+            >
+              <span
+                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                  runUnits === "metric"
+                    ? "translate-x-4 left-0.5"
+                    : "translate-x-0 left-0.5"
+                }`}
+              />
+            </button>
+            <span
+              className={`text-xs ${runUnits === "metric" ? "font-medium text-zinc-900 dark:text-zinc-50" : "text-zinc-400"}`}
+            >
+              km
+            </span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -172,6 +221,15 @@ export function RunFormModal({
                 {distanceUnit}
               </span>
             </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 rounded-lg bg-zinc-100 py-3 dark:bg-zinc-800">
+            <span className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              {paceFormatted}
+            </span>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
+              {paceUnit}
+            </span>
           </div>
 
           {error && (
