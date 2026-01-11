@@ -36,6 +36,7 @@ export class UserService {
           userChallenges: {
             create: {
               challengeId: currentChallenge.id,
+              daysCount: currentChallenge.daysCount,
             },
           },
         }),

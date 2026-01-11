@@ -65,6 +65,7 @@ model Challenge {
   current        Boolean         @default(false)
   season         Season
   year           String
+  daysCount      Int             @default(30)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   userChallenges UserChallenge[]
@@ -76,6 +77,7 @@ model UserChallenge {
   id          String    @id @default(cuid())
   userId      String
   challengeId String
+  daysCount   Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 

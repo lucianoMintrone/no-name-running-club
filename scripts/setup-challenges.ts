@@ -36,6 +36,7 @@ async function main() {
       create: {
         userId: user.id,
         challengeId: challenge.id,
+        daysCount: challenge.daysCount,
       },
     });
     enrolled++;
