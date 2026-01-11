@@ -5,15 +5,12 @@ import { StampGrid } from "./StampGrid";
 
 interface ChallengeCardProps {
   title: string;
-  initialTotalStamps?: number;
+  daysCount: number;
 }
 
-export function ChallengeCard({
-  title,
-  initialTotalStamps = 30,
-}: ChallengeCardProps) {
-  const [totalStamps, setTotalStamps] = useState(initialTotalStamps);
-  const progress = Math.round((totalStamps / 30) * 100);
+export function ChallengeCard({ title, daysCount }: ChallengeCardProps) {
+  const [totalStamps, setTotalStamps] = useState(daysCount);
+  const progress = Math.round((totalStamps / daysCount) * 100);
 
   const handleAddDay = () => {
     setTotalStamps(totalStamps + 1);
@@ -26,7 +23,7 @@ export function ChallengeCard({
           {title}
         </h2>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          {totalStamps} of 30 runs ({progress}%)
+          {totalStamps} of {daysCount} runs ({progress}%)
         </p>
       </div>
       <div className="flex justify-center">

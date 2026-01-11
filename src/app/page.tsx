@@ -9,6 +9,7 @@ export default async function Home() {
 
   // Get the user's current challenge if signed in
   let challengeTitle: string | null = null;
+  let daysCount: number | null = null;
   if (session?.user?.id) {
     const userChallenge = await ChallengeService.getUserCurrentChallenge(
       session.user.id
@@ -17,6 +18,7 @@ export default async function Home() {
       challengeTitle = ChallengeService.formatChallengeTitle(
         userChallenge.challenge
       );
+      daysCount = userChallenge.daysCount;
     }
   }
 
@@ -55,8 +57,8 @@ export default async function Home() {
       </nav>
 
       <main className="mx-auto max-w-4xl px-6 py-8">
-        {session?.user && challengeTitle ? (
-          <ChallengeCard title={challengeTitle} />
+        {session?.user && challengeTitle && daysCount ? (
+          <ChallengeCard title={challengeTitle} daysCount={daysCount} />
         ) : (
           <>
             <header className="mb-16 pt-8 text-center">
