@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { StampGrid } from "./StampGrid";
 import { RunFormModal } from "./RunFormModal";
 
@@ -8,13 +9,23 @@ interface ChallengeCardProps {
   title: string;
   daysCount: number;
   units: string;
+  completedPositions: number[];
+  userAvatar?: string;
 }
 
-export function ChallengeCard({ title, daysCount, units }: ChallengeCardProps) {
+export function ChallengeCard({
+  title,
+  daysCount,
+  units,
+  completedPositions,
+  userAvatar,
+}: ChallengeCardProps) {
   const [totalStamps, setTotalStamps] = useState(daysCount);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState(1);
-  const progress = Math.round((totalStamps / daysCount) * 100);
+  const router = useRouter();
+  const completedCount = completedPositions.length;
+  const progress = Math.round((completedCount / daysCount) * 100);
 
   const handleAddDay = () => {
     setTotalStamps(totalStamps + 1);
@@ -26,8 +37,7 @@ export function ChallengeCard({ title, daysCount, units }: ChallengeCardProps) {
   };
 
   const handleRunCreated = () => {
-    // For now, just close the modal
-    // Later we can refresh the data or update the UI
+    router.refresh();
   };
 
   return (
@@ -37,12 +47,14 @@ export function ChallengeCard({ title, daysCount, units }: ChallengeCardProps) {
           {title}
         </h2>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          {totalStamps} of {daysCount} runs ({progress}%)
+          {completedCount} of {daysCount} runs ({progress}%)
         </p>
       </div>
       <div className="flex justify-center">
         <StampGrid
           totalStamps={totalStamps}
+          completedPositions={completedPositions}
+          userAvatar={userAvatar}
           onAddDay={handleAddDay}
           onStampClick={handleStampClick}
         />

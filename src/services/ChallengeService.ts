@@ -1,8 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import type { Challenge, UserChallenge } from "@prisma/client";
+import type { Challenge, UserChallenge, Run } from "@prisma/client";
 
 export type UserChallengeWithChallenge = UserChallenge & {
   challenge: Challenge;
+};
+
+export type UserChallengeWithChallengeAndRuns = UserChallenge & {
+  challenge: Challenge;
+  runs: Run[];
 };
 
 export class ChallengeService {
@@ -16,11 +21,11 @@ export class ChallengeService {
   }
 
   /**
-   * Gets a user's enrollment in the current challenge.
+   * Gets a user's enrollment in the current challenge with runs.
    */
   static async getUserCurrentChallenge(
     userId: string
-  ): Promise<UserChallengeWithChallenge | null> {
+  ): Promise<UserChallengeWithChallengeAndRuns | null> {
     return prisma.userChallenge.findFirst({
       where: {
         userId,
@@ -30,6 +35,7 @@ export class ChallengeService {
       },
       include: {
         challenge: true,
+        runs: true,
       },
     });
   }

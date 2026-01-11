@@ -13,6 +13,7 @@ export default async function Home() {
   let challengeTitle: string | null = null;
   let daysCount: number | null = null;
   let userUnits: string = "imperial";
+  let completedPositions: number[] = [];
   if (session?.user?.id) {
     const [userChallenge, user] = await Promise.all([
       ChallengeService.getUserCurrentChallenge(session.user.id),
@@ -23,6 +24,7 @@ export default async function Home() {
         userChallenge.challenge
       );
       daysCount = userChallenge.daysCount;
+      completedPositions = userChallenge.runs.map((run) => run.position);
     }
     if (user) {
       userUnits = user.units;
@@ -66,7 +68,13 @@ export default async function Home() {
 
       <main className="mx-auto max-w-4xl px-6 py-8">
         {session?.user && challengeTitle && daysCount ? (
-          <ChallengeCard title={challengeTitle} daysCount={daysCount} units={userUnits} />
+          <ChallengeCard
+            title={challengeTitle}
+            daysCount={daysCount}
+            units={userUnits}
+            completedPositions={completedPositions}
+            userAvatar={session.user.image || undefined}
+          />
         ) : (
           <>
             <header className="mb-16 pt-8 text-center">
