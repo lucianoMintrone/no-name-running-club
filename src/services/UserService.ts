@@ -85,7 +85,7 @@ export class UserService {
    */
   static async updateUser(
     id: string,
-    data: Partial<Pick<User, "name" | "image">>
+    data: Partial<Pick<User, "name" | "image" | "units">>
   ): Promise<User> {
     return prisma.user.update({
       where: { id },

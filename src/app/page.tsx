@@ -1,24 +1,31 @@
 import { auth } from "@/lib/auth";
 import { signOutUser } from "@/app/actions/auth";
 import { SignInModal } from "@/components/SignInModal";
+import { SettingsModal } from "@/components/SettingsModal";
 import { ChallengeCard } from "@/components/ChallengeCard";
 import { ChallengeService } from "@/services/ChallengeService";
+import { UserService } from "@/services/UserService";
 
 export default async function Home() {
   const session = await auth();
 
-  // Get the user's current challenge if signed in
+  // Get the user's current challenge and settings if signed in
   let challengeTitle: string | null = null;
   let daysCount: number | null = null;
+  let userUnits: string = "imperial";
   if (session?.user?.id) {
-    const userChallenge = await ChallengeService.getUserCurrentChallenge(
-      session.user.id
-    );
+    const [userChallenge, user] = await Promise.all([
+      ChallengeService.getUserCurrentChallenge(session.user.id),
+      UserService.findById(session.user.id),
+    ]);
     if (userChallenge) {
       challengeTitle = ChallengeService.formatChallengeTitle(
         userChallenge.challenge
       );
       daysCount = userChallenge.daysCount;
+    }
+    if (user) {
+      userUnits = user.units;
     }
   }
 
@@ -34,6 +41,7 @@ export default async function Home() {
               <span className="text-sm text-zinc-600 dark:text-zinc-400">
                 {session.user.name || session.user.email}
               </span>
+              <SettingsModal currentUnits={userUnits} />
               {session.user.image && (
                 <img
                   src={session.user.image}
