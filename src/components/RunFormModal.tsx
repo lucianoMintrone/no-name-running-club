@@ -18,7 +18,9 @@ export function RunFormModal({
   units,
   onRunCreated,
 }: RunFormModalProps) {
-  const today = new Date().toISOString().split("T")[0];
+  // Use local date to avoid timezone issues
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const [date, setDate] = useState(today);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(30);
@@ -104,7 +106,7 @@ export function RunFormModal({
               onChange={(e) => setDate(e.target.value)}
               max={today}
               required
-              className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50 dark:[color-scheme:dark]"
             />
           </div>
 
