@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { updateUserUnits } from "@/app/actions/user";
 
 interface SettingsModalProps {
@@ -11,12 +12,14 @@ export function SettingsModal({ currentUnits }: SettingsModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [units, setUnits] = useState(currentUnits);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const handleToggle = () => {
     const newUnits = units === "imperial" ? "metric" : "imperial";
     setUnits(newUnits);
     startTransition(async () => {
       await updateUserUnits(newUnits);
+      router.refresh();
     });
   };
 
