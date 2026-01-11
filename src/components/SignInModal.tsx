@@ -10,7 +10,7 @@ export function SignInModal() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+        className="cursor-pointer rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
       >
         Sign in
       </button>
@@ -24,7 +24,7 @@ export function SignInModal() {
           <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-xl dark:bg-zinc-900">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+              className="cursor-pointer absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export function SignInModal() {
             <form action={signInWithGoogle} className="mt-8">
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-zinc-300 rounded-lg shadow-sm bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-3 border border-zinc-300 rounded-lg shadow-sm bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path

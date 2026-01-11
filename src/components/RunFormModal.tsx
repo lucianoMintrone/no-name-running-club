@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { createRun } from "@/app/actions/run";
+import { saveRun } from "@/app/actions/run";
 
 interface RunFormModalProps {
   isOpen: boolean;
@@ -66,7 +66,7 @@ export function RunFormModal({
 
     startTransition(async () => {
       try {
-        await createRun({
+        await saveRun({
           date,
           durationInMinutes: totalMinutes,
           distance: distanceValue,
@@ -89,7 +89,7 @@ export function RunFormModal({
       <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-xl dark:bg-zinc-900">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className="cursor-pointer absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +120,7 @@ export function RunFormModal({
             <button
               type="button"
               onClick={handleUnitsToggle}
-              className={`relative h-5 w-9 rounded-full transition-colors ${
+              className={`relative h-5 w-9 cursor-pointer rounded-full transition-colors ${
                 runUnits === "metric"
                   ? "bg-emerald-500"
                   : "bg-zinc-300 dark:bg-zinc-600"
@@ -223,13 +223,18 @@ export function RunFormModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 rounded-lg bg-zinc-100 py-3 dark:bg-zinc-800">
-            <span className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-              {paceFormatted}
-            </span>
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">
-              {paceUnit}
-            </span>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Pace
+            </label>
+            <div className="flex items-center justify-center gap-2 rounded-lg bg-zinc-100 py-3 dark:bg-zinc-800">
+              <span className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+                {paceFormatted}
+              </span>
+              <span className="w-14 text-sm text-zinc-500 dark:text-zinc-400">
+                {paceUnit}
+              </span>
+            </div>
           </div>
 
           {error && (
@@ -239,7 +244,7 @@ export function RunFormModal({
           <button
             type="submit"
             disabled={isPending}
-            className="w-full rounded-lg bg-emerald-500 px-4 py-2.5 font-medium text-white hover:bg-emerald-600 disabled:opacity-50"
+            className="w-full cursor-pointer rounded-lg bg-emerald-500 px-4 py-2.5 font-medium text-white hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isPending ? "Saving..." : "Save Run"}
           </button>

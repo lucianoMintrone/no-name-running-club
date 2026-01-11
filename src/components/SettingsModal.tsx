@@ -27,7 +27,7 @@ export function SettingsModal({ currentUnits }: SettingsModalProps) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+        className="cursor-pointer rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
         aria-label="Settings"
       >
         <svg
@@ -61,7 +61,7 @@ export function SettingsModal({ currentUnits }: SettingsModalProps) {
           <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-xl dark:bg-zinc-900">
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+              className="cursor-pointer absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +98,7 @@ export function SettingsModal({ currentUnits }: SettingsModalProps) {
                 <button
                   onClick={handleToggle}
                   disabled={isPending}
-                  className={`relative h-6 w-11 rounded-full transition-colors ${
+                  className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${
                     units === "metric"
                       ? "bg-emerald-500"
                       : "bg-zinc-300 dark:bg-zinc-600"
