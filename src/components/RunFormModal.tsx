@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { saveRun } from "@/app/actions/run";
+import { getCurrentTemperature } from "@/app/actions/weather";
 
 interface RunFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   position: number;
-  units: string;
-  isEditing?: boolean;
   onRunCreated: () => void;
 }
 
@@ -16,61 +15,55 @@ export function RunFormModal({
   isOpen,
   onClose,
   position,
-  units,
-  isEditing = false,
   onRunCreated,
 }: RunFormModalProps) {
-  // Use local date to avoid timezone issues
-  const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  const [date, setDate] = useState(today);
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(30);
-  const [distance, setDistance] = useState("");
-  const [runUnits, setRunUnits] = useState(units);
+  const [temperature, setTemperature] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [isLoadingWeather, setIsLoadingWeather] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasFetchedWeather, setHasFetchedWeather] = useState(false);
 
-  const distanceUnit = runUnits === "metric" ? "kms" : "miles";
-  const paceUnit = runUnits === "metric" ? "min/km" : "min/mile";
-  const totalMinutes = hours * 60 + minutes;
-
-  // Calculate pace
-  const distanceValue = parseFloat(distance) || 0;
-  const pace =
-    distanceValue > 0 ? totalMinutes / distanceValue : 0;
-  const paceMinutes = Math.floor(pace);
-  const paceSeconds = Math.round((pace - paceMinutes) * 60);
-  const paceFormatted =
-    distanceValue > 0
-      ? `${paceMinutes}'${paceSeconds.toString().padStart(2, "0")}"`
-      : "--";
-
-  const handleUnitsToggle = () => {
-    setRunUnits(runUnits === "imperial" ? "metric" : "imperial");
-  };
+  // Fetch current temperature when modal opens
+  useEffect(() => {
+    if (isOpen && !hasFetchedWeather) {
+      setIsLoadingWeather(true);
+      setHasFetchedWeather(true);
+      getCurrentTemperature()
+        .then((temp) => {
+          if (temp !== null) {
+            setTemperature(String(temp));
+          }
+        })
+        .catch(() => {
+          // Silently fail - user can enter manually
+        })
+        .finally(() => {
+          setIsLoadingWeather(false);
+        });
+    }
+    
+    // Reset state when modal closes
+    if (!isOpen) {
+      setTemperature("");
+      setHasFetchedWeather(false);
+      setError(null);
+    }
+  }, [isOpen, hasFetchedWeather]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (totalMinutes < 30) {
-      setError("Duration must be at least 30 minutes");
-      return;
-    }
-
-    if (distanceValue <= 0) {
-      setError("Distance must be greater than 0");
+    const temp = parseInt(temperature);
+    if (isNaN(temp)) {
+      setError("Please enter a valid temperature");
       return;
     }
 
     startTransition(async () => {
       try {
         await saveRun({
-          date,
-          durationInMinutes: totalMinutes,
-          distance: distanceValue,
-          units: runUnits as "imperial" | "metric",
+          temperature: temp,
           position,
         });
         onRunCreated();
@@ -86,7 +79,7 @@ export function RunFormModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-xl dark:bg-zinc-900">
+      <div className="relative z-10 w-full max-w-sm rounded-xl bg-white p-6 shadow-xl dark:bg-zinc-900">
         <button
           onClick={onClose}
           className="cursor-pointer absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
@@ -107,146 +100,51 @@ export function RunFormModal({
           </svg>
         </button>
 
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            {isEditing ? "Edit" : "Add"} Run #{position}
+        <div className="mb-6 text-center">
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+            Run #{position}
           </h2>
-          <div className="flex items-center gap-2">
-            <span
-              className={`text-xs ${runUnits === "imperial" ? "font-medium text-zinc-900 dark:text-zinc-50" : "text-zinc-400"}`}
-            >
-              mi
-            </span>
-            <button
-              type="button"
-              onClick={handleUnitsToggle}
-              className={`relative h-5 w-9 cursor-pointer rounded-full transition-colors ${
-                runUnits === "metric"
-                  ? "bg-emerald-500"
-                  : "bg-zinc-300 dark:bg-zinc-600"
-              }`}
-              role="switch"
-              aria-checked={runUnits === "metric"}
-            >
-              <span
-                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
-                  runUnits === "metric"
-                    ? "translate-x-4 left-0.5"
-                    : "translate-x-0 left-0.5"
-                }`}
-              />
-            </button>
-            <span
-              className={`text-xs ${runUnits === "metric" ? "font-medium text-zinc-900 dark:text-zinc-50" : "text-zinc-400"}`}
-            >
-              km
-            </span>
-          </div>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            What was the temperature?
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Date
-            </label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              max={today}
-              required
-              className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50 dark:[color-scheme:dark]"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Duration (minimum 30 minutes)
-            </label>
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    value={hours}
-                    onChange={(e) =>
-                      setHours(Math.max(0, parseInt(e.target.value) || 0))
-                    }
-                    min={0}
-                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50"
-                  />
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    hrs
-                  </span>
-                </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex items-center justify-center gap-2">
+            {isLoadingWeather ? (
+              <div className="w-24 h-14 rounded-lg border border-zinc-300 bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-800 flex items-center justify-center">
+                <svg className="animate-spin h-5 w-5 text-zinc-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    value={minutes}
-                    onChange={(e) =>
-                      setMinutes(
-                        Math.max(0, Math.min(59, parseInt(e.target.value) || 0))
-                      )
-                    }
-                    min={0}
-                    max={59}
-                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50"
-                  />
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    min
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Distance
-            </label>
-            <div className="flex items-center gap-2">
+            ) : (
               <input
                 type="number"
-                value={distance}
-                onChange={(e) => setDistance(e.target.value)}
-                step="0.01"
-                min="0.01"
-                required
-                placeholder="0.00"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50"
+                value={temperature}
+                onChange={(e) => setTemperature(e.target.value)}
+                placeholder="32"
+                autoFocus
+                className="w-24 rounded-lg border border-zinc-300 bg-white px-4 py-3 text-center text-2xl font-semibold text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50"
               />
-              <span className="w-10 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                {distanceUnit}
-              </span>
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Pace
-            </label>
-            <div className="flex items-center justify-center gap-2 rounded-lg bg-zinc-100 py-3 dark:bg-zinc-800">
-              <span className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                {paceFormatted}
-              </span>
-              <span className="w-14 text-sm text-zinc-500 dark:text-zinc-400">
-                {paceUnit}
-              </span>
-            </div>
+            )}
+            <span className="text-xl font-medium text-zinc-500 dark:text-zinc-400">
+              °F
+            </span>
           </div>
 
           {error && (
-            <p className="text-sm text-red-500 dark:text-red-400">{error}</p>
+            <p className="text-center text-sm text-red-500 dark:text-red-400">
+              {error}
+            </p>
           )}
 
           <button
             type="submit"
-            disabled={isPending}
-            className="w-full cursor-pointer rounded-lg bg-emerald-500 px-4 py-2.5 font-medium text-white hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isPending || !temperature}
+            className="w-full cursor-pointer rounded-lg bg-emerald-500 px-4 py-3 font-medium text-white hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isPending ? "Saving..." : "Save Run"}
+            {isPending ? "Saving..." : "Log Run"}
           </button>
         </form>
       </div>

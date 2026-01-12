@@ -5,10 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { ChallengeService } from "@/services/ChallengeService";
 
 export interface SaveRunInput {
-  date: string;
-  durationInMinutes: number;
-  distance: number;
-  units: "imperial" | "metric";
+  temperature: number;
   position: number;
 }
 
@@ -33,15 +30,15 @@ export async function saveRun(input: SaveRunInput) {
     },
   });
 
+  const today = new Date();
+
   if (existingRun) {
     // Update existing run
     return prisma.run.update({
       where: { id: existingRun.id },
       data: {
-        date: new Date(input.date),
-        durationInMinutes: input.durationInMinutes,
-        distance: input.distance,
-        units: input.units,
+        temperature: input.temperature,
+        date: today,
       },
     });
   }
@@ -50,10 +47,8 @@ export async function saveRun(input: SaveRunInput) {
   return prisma.run.create({
     data: {
       userChallengeId: userChallenge.id,
-      date: new Date(input.date),
-      durationInMinutes: input.durationInMinutes,
-      distance: input.distance,
-      units: input.units,
+      date: today,
+      temperature: input.temperature,
       position: input.position,
     },
   });

@@ -1,0 +1,17 @@
+yarn run v1.22.22
+$ prisma migrate deploy
+[dotenv@17.2.3] injecting env (5) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+Loaded Prisma config from prisma.config.ts.
+
+Prisma config detected, skipping environment variable loading.
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "postgres", schema "public" at "db.prisma.io:5432"
+
+4 migrations found in prisma/migrations
+
+Error: P3005
+
+The database schema is not empty. Read more about how to baseline an existing production database: https://pris.ly/d/migrate-baseline
+
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

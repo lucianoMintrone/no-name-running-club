@@ -63,8 +63,6 @@ export function ChallengeCard({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         position={selectedPosition}
-        units={units}
-        isEditing={completedPositions.includes(selectedPosition)}
         onRunCreated={handleRunCreated}
       />
     </div>

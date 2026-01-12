@@ -3,7 +3,10 @@ import { signOutUser } from "@/app/actions/auth";
 import { SignInModal } from "@/components/SignInModal";
 import { SettingsModal } from "@/components/SettingsModal";
 import { ChallengeCard } from "@/components/ChallengeCard";
-import { ChallengeService } from "@/services/ChallengeService";
+import { ColdestRunWidget } from "@/components/ColdestRunWidget";
+import { LeaderboardWidget } from "@/components/LeaderboardWidget";
+import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
+import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
 
 export default async function Home() {
@@ -13,11 +16,17 @@ export default async function Home() {
   let challengeTitle: string | null = null;
   let daysCount: number | null = null;
   let userUnits: string = "imperial";
+  let userZipCode: string | null = null;
   let completedPositions: number[] = [];
+  let coldestRun: ColdestRunInfo | null = null;
+  let leaderboard: LeaderboardEntry[] = [];
+  
   if (session?.user?.id) {
-    const [userChallenge, user] = await Promise.all([
+    const [userChallenge, user, coldest, leaders] = await Promise.all([
       ChallengeService.getUserCurrentChallenge(session.user.id),
       UserService.findById(session.user.id),
+      ChallengeService.getColdestRun(session.user.id),
+      ChallengeService.getChallengeLeaderboard(),
     ]);
     if (userChallenge) {
       challengeTitle = ChallengeService.formatChallengeTitle(
@@ -28,7 +37,10 @@ export default async function Home() {
     }
     if (user) {
       userUnits = user.units;
+      userZipCode = user.zipCode;
     }
+    coldestRun = coldest;
+    leaderboard = leaders;
   }
 
   return (
@@ -43,7 +55,7 @@ export default async function Home() {
               <span className="text-sm text-zinc-600 dark:text-zinc-400">
                 {session.user.name || session.user.email}
               </span>
-              <SettingsModal currentUnits={userUnits} />
+              <SettingsModal currentUnits={userUnits} currentZipCode={userZipCode} />
               {session.user.image && (
                 <img
                   src={session.user.image}
@@ -68,13 +80,30 @@ export default async function Home() {
 
       <main className="mx-auto max-w-4xl px-6 py-8">
         {session?.user && challengeTitle && daysCount ? (
-          <ChallengeCard
-            title={challengeTitle}
-            daysCount={daysCount}
-            units={userUnits}
-            completedPositions={completedPositions}
-            userAvatar={session.user.image || undefined}
-          />
+          <div className="flex flex-col gap-6 md:flex-row md:items-start">
+            <div className="flex-1">
+              <ChallengeCard
+                title={challengeTitle}
+                daysCount={daysCount}
+                units={userUnits}
+                completedPositions={completedPositions}
+                userAvatar={session.user.image || undefined}
+              />
+            </div>
+            <div className="w-full md:w-52 space-y-4">
+              {coldestRun && (
+                <ColdestRunWidget
+                  temperature={coldestRun.temperature}
+                  date={coldestRun.date}
+                  runNumber={coldestRun.position}
+                />
+              )}
+              {leaderboard.length > 0 && (
+                <LeaderboardWidget entries={leaderboard} />
+              )}
+              <AllTimeRecordWidget name="Isaac Stoner" temperature={-30} />
+            </div>
+          </div>
         ) : (
           <>
             <header className="mb-16 pt-8 text-center">
