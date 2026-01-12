@@ -97,6 +97,7 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
               </h2>
             </div>
 
+            {/* Units switch hidden for now
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700">
                 Units
@@ -133,8 +134,9 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
                 </span>
               </div>
             </div>
+            */}
 
-            <div className="mt-6 pt-6 border-t border-nnrc-lavender">
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Home Location (for weather)
               </label>
