@@ -18,6 +18,7 @@ model User {
   emailVerified  DateTime?
   name           String?
   image          String?
+  role           String          @default("member") // "member" | "admin"
   units          String          @default("imperial")
   zipCode        String?
   createdAt      DateTime        @default(now())

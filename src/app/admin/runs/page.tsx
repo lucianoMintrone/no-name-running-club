@@ -1,0 +1,134 @@
+import { prisma } from "@/lib/prisma";
+import { RunActions } from "./RunActions";
+
+export default async function AdminRunsPage() {
+  const runs = await prisma.run.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 100,
+    include: {
+      userChallenge: {
+        include: {
+          user: { select: { id: true, name: true, email: true, image: true } },
+          challenge: { select: { season: true, year: true } },
+        },
+      },
+    },
+  });
+
+  const challenges = await prisma.challenge.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-nnrc-purple-dark">
+          Run Moderation
+        </h1>
+        <div className="text-sm text-gray-500">
+          Showing latest {runs.length} runs
+        </div>
+      </div>
+
+      {/* Runs List */}
+      <div className="rounded-xl bg-white border border-nnrc-lavender shadow-md overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-nnrc-lavender-light">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
+                User
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
+                Challenge
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
+                Run #
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
+                Temperature
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
+                Date
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-nnrc-lavender">
+            {runs.map((run) => {
+              const isSuspicious =
+                run.temperature !== null && run.temperature < -20;
+              return (
+                <tr
+                  key={run.id}
+                  className={`hover:bg-nnrc-lavender-light/50 ${
+                    isSuspicious ? "bg-red-50" : ""
+                  }`}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      {run.userChallenge.user.image ? (
+                        <img
+                          src={run.userChallenge.user.image}
+                          alt=""
+                          className="h-8 w-8 rounded-full"
+                        />
+                      ) : (
+                        <div className="h-8 w-8 rounded-full bg-nnrc-purple-light flex items-center justify-center text-white text-xs font-medium">
+                          {(
+                            run.userChallenge.user.name ||
+                            run.userChallenge.user.email
+                          )?.[0]?.toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <div className="text-sm font-medium text-nnrc-purple-dark">
+                          {run.userChallenge.user.name || "No name"}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {run.userChallenge.user.email}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    {run.userChallenge.challenge.season.charAt(0).toUpperCase() +
+                      run.userChallenge.challenge.season.slice(1)}{" "}
+                    {run.userChallenge.challenge.year}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    #{run.position}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`text-sm font-medium ${
+                        isSuspicious ? "text-red-600" : "text-gray-600"
+                      }`}
+                    >
+                      {run.temperature}°F
+                      {isSuspicious && (
+                        <span className="ml-2 text-xs text-red-500">
+                          ⚠️ Suspicious
+                        </span>
+                      )}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(run.date).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <RunActions runId={run.id} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {runs.length === 0 && (
+          <div className="p-6 text-center text-gray-500">No runs found.</div>
+        )}
+      </div>
+    </div>
+  );
+}

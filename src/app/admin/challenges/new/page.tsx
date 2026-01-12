@@ -1,0 +1,154 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createChallenge } from "@/app/actions/admin";
+
+export default function NewChallengePage() {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(formData: FormData) {
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      await createChallenge(formData);
+      router.push("/admin/challenges");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create challenge");
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="max-w-2xl space-y-6">
+      <div className="flex items-center gap-4">
+        <a
+          href="/admin/challenges"
+          className="text-nnrc-purple hover:text-nnrc-purple-dark"
+        >
+          ← Back
+        </a>
+        <h1 className="text-2xl font-bold text-nnrc-purple-dark">
+          Create New Challenge
+        </h1>
+      </div>
+
+      <form
+        action={handleSubmit}
+        className="rounded-xl bg-white border border-nnrc-lavender p-6 shadow-md space-y-4"
+      >
+        {error && (
+          <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-red-700 text-sm">
+            {error}
+          </div>
+        )}
+
+        <div>
+          <label
+            htmlFor="season"
+            className="block text-sm font-medium text-nnrc-purple-dark mb-1"
+          >
+            Season
+          </label>
+          <select
+            id="season"
+            name="season"
+            required
+            className="w-full rounded-lg border border-nnrc-lavender px-4 py-2 focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
+          >
+            <option value="winter">Winter</option>
+            <option value="summer">Summer</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="year"
+            className="block text-sm font-medium text-nnrc-purple-dark mb-1"
+          >
+            Year
+          </label>
+          <input
+            type="text"
+            id="year"
+            name="year"
+            required
+            placeholder="e.g., 2025/2026"
+            className="w-full rounded-lg border border-nnrc-lavender px-4 py-2 focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            For winter challenges spanning two years, use format like "2025/2026"
+          </p>
+        </div>
+
+        <div>
+          <label
+            htmlFor="daysCount"
+            className="block text-sm font-medium text-nnrc-purple-dark mb-1"
+          >
+            Number of Days
+          </label>
+          <input
+            type="number"
+            id="daysCount"
+            name="daysCount"
+            required
+            min="1"
+            max="365"
+            defaultValue="30"
+            className="w-full rounded-lg border border-nnrc-lavender px-4 py-2 focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
+          />
+        </div>
+
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="current"
+            name="current"
+            className="h-4 w-4 rounded border-nnrc-lavender text-nnrc-purple focus:ring-nnrc-purple"
+          />
+          <label
+            htmlFor="current"
+            className="text-sm font-medium text-nnrc-purple-dark"
+          >
+            Set as current (active) challenge
+          </label>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="enrollAll"
+            name="enrollAll"
+            className="h-4 w-4 rounded border-nnrc-lavender text-nnrc-purple focus:ring-nnrc-purple"
+          />
+          <label
+            htmlFor="enrollAll"
+            className="text-sm font-medium text-nnrc-purple-dark"
+          >
+            Automatically enroll all existing users
+          </label>
+        </div>
+
+        <div className="flex gap-3 pt-4">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="rounded-lg bg-nnrc-purple px-6 py-2 text-white hover:bg-nnrc-purple-dark disabled:opacity-50"
+          >
+            {isSubmitting ? "Creating..." : "Create Challenge"}
+          </button>
+          <a
+            href="/admin/challenges"
+            className="rounded-lg border border-nnrc-lavender px-6 py-2 text-nnrc-purple-dark hover:bg-nnrc-lavender-light"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  );
+}

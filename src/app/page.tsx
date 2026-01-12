@@ -8,6 +8,8 @@ import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
 import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
+import { isAdmin } from "@/lib/admin";
+import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
@@ -61,6 +63,14 @@ export default async function Home() {
               <span className="text-sm text-gray-600">
                 {session.user.name || session.user.email}
               </span>
+              {isAdmin(session.user.role) && (
+                <Link
+                  href="/admin"
+                  className="rounded-lg bg-nnrc-purple px-3 py-1.5 text-xs font-medium text-white hover:bg-nnrc-purple-dark transition-colors duration-200"
+                >
+                  Admin
+                </Link>
+              )}
               <SettingsModal currentUnits={userUnits} currentZipCode={userZipCode} />
               {session.user.image && (
                 <img
