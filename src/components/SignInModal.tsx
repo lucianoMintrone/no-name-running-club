@@ -10,7 +10,7 @@ export function SignInModal() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="cursor-pointer rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+        className="cursor-pointer rounded-lg bg-nnrc-purple px-4 py-2 text-sm font-medium text-white hover:bg-nnrc-purple-dark transition-colors duration-200"
       >
         Sign in
       </button>
@@ -21,10 +21,10 @@ export function SignInModal() {
             className="absolute inset-0 bg-black/50"
             onClick={() => setIsOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-xl dark:bg-zinc-900">
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white border-2 border-nnrc-lavender p-8 shadow-xl">
             <button
               onClick={() => setIsOpen(false)}
-              className="cursor-pointer absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+              className="cursor-pointer absolute right-4 top-4 text-gray-400 hover:text-nnrc-purple-dark"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -43,10 +43,10 @@ export function SignInModal() {
             </button>
 
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+              <h2 className="text-2xl font-bold text-nnrc-purple-dark">
                 Sign in
               </h2>
-              <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="mt-2 text-sm text-gray-600">
                 Sign in to your account to continue
               </p>
             </div>
@@ -54,7 +54,7 @@ export function SignInModal() {
             <form action={signInWithGoogle} className="mt-8">
               <button
                 type="submit"
-                className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-3 border border-zinc-300 rounded-lg shadow-sm bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-3 border-2 border-nnrc-lavender rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-nnrc-lavender-light transition-colors duration-200"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path

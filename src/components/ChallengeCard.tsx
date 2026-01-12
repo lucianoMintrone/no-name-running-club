@@ -10,7 +10,6 @@ interface ChallengeCardProps {
   daysCount: number;
   units: string;
   completedPositions: number[];
-  userAvatar?: string;
 }
 
 export function ChallengeCard({
@@ -18,7 +17,6 @@ export function ChallengeCard({
   daysCount,
   units,
   completedPositions,
-  userAvatar,
 }: ChallengeCardProps) {
   const [totalStamps, setTotalStamps] = useState(daysCount);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,20 +39,26 @@ export function ChallengeCard({
   };
 
   return (
-    <div className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-      <div className="mb-5 text-center">
-        <h2 className="mb-1 text-xl font-bold text-zinc-900 dark:text-zinc-50">
+    <div className="mx-auto max-w-md rounded-2xl bg-white border-2 border-nnrc-lavender p-6 shadow-lg">
+      <div className="mb-4 text-center">
+        <h2 className="mb-1 text-xl font-bold text-nnrc-purple-dark">
           {title}
         </h2>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-gray-600">
           {completedCount} of {daysCount} runs ({progress}%)
         </p>
+      </div>
+      {/* Progress Bar */}
+      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-5">
+        <div 
+          className="bg-gradient-to-r from-nnrc-purple to-nnrc-lavender h-full rounded-full transition-all duration-500 ease-out"
+          style={{ width: `${progress}%` }}
+        />
       </div>
       <div className="flex justify-center">
         <StampGrid
           totalStamps={totalStamps}
           completedPositions={completedPositions}
-          userAvatar={userAvatar}
           onAddDay={handleAddDay}
           onStampClick={handleStampClick}
         />

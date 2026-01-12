@@ -20,6 +20,7 @@ export interface LeaderboardEntry {
   firstName: string;
   temperature: number;
   date: Date;
+  image?: string | null;
 }
 
 export interface AllTimeRecord {
@@ -27,6 +28,7 @@ export interface AllTimeRecord {
   temperature: number;
   date: Date;
   challengeTitle: string;
+  image?: string | null;
 }
 
 export interface ActiveChallengeWithLeaderboard {
@@ -130,6 +132,7 @@ export class ChallengeService {
             user: {
               select: {
                 name: true,
+                image: true,
               },
             },
           },
@@ -148,6 +151,7 @@ export class ChallengeService {
           firstName,
           temperature: run.temperature!,
           date: run.date,
+          image: run.userChallenge.user.image,
         });
       }
     }
@@ -195,6 +199,7 @@ export class ChallengeService {
               user: {
                 select: {
                   name: true,
+                  image: true,
                 },
               },
             },
@@ -213,6 +218,7 @@ export class ChallengeService {
             firstName,
             temperature: run.temperature!,
             date: run.date,
+            image: run.userChallenge.user.image,
           });
         }
       }
@@ -248,6 +254,7 @@ export class ChallengeService {
             user: {
               select: {
                 name: true,
+                image: true,
               },
             },
             challenge: true,
@@ -265,6 +272,7 @@ export class ChallengeService {
       temperature: coldestRun.temperature!,
       date: coldestRun.date,
       challengeTitle: this.formatChallengeTitle(coldestRun.userChallenge.challenge),
+      image: coldestRun.userChallenge.user.image,
     };
   }
 }

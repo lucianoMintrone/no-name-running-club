@@ -1,8 +1,7 @@
-@import "tailwindcss";
-
 /**
  * NNRC Design Tokens
  * CSS Custom Properties for No Name Running Club
+ * Import this file in your global styles or layout component
  */
 
 :root {
@@ -11,14 +10,14 @@
      ==================================== */
   
   /* Primary Purple */
-  --nnrc-purple-primary: #8B7AAF;
-  --nnrc-purple-dark: #5C4D7A;
-  --nnrc-purple-light: #B8A8D4;
+  --nnrc-purple-primary: #A999C6;
+  --nnrc-purple-dark: #7A6C94;
+  --nnrc-purple-light: #C4B0DB;
   
-  /* Accent Lavender - Lightened for better contrast */
-  --nnrc-lavender-primary: #E5DCF0;
-  --nnrc-lavender-dark: #D2C5E0;
-  --nnrc-lavender-light: #F5F1FA;
+  /* Accent Lavender */
+  --nnrc-lavender-primary: #D2C1DD;
+  --nnrc-lavender-dark: #BBA8C9;
+  --nnrc-lavender-light: #E8E0EE;
   
   /* Temperature Palette */
   --nnrc-temp-extreme-cold: #3B82F6;  /* Below 0°F */
@@ -206,35 +205,17 @@
   --duration-base: 200ms;
   --duration-slow: 300ms;
   --duration-slower: 500ms;
-
-  /* Legacy variables for compatibility */
-  --background: #ffffff;
-  --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  
-  /* NNRC Brand Colors - Updated for better contrast */
-  --color-nnrc-purple: #8B7AAF;
-  --color-nnrc-purple-dark: #5C4D7A;
-  --color-nnrc-purple-light: #B8A8D4;
-  --color-nnrc-lavender: #E5DCF0;
-  --color-nnrc-lavender-dark: #D2C5E0;
-  --color-nnrc-lavender-light: #F5F1FA;
-  
-  /* Temperature Scale */
-  --color-nnrc-temp-extreme-cold: #3B82F6;
-  --color-nnrc-temp-very-cold: #6366F1;
-  --color-nnrc-temp-cold: #8B5CF6;
-  --color-nnrc-temp-cool: #A78BFA;
-  --color-nnrc-temp-mild: #C4B5FD;
-}
+/* ====================================
+   DARK MODE (Optional Future Enhancement)
+   ==================================== */
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Override variables for dark mode if needed */
+    /* Example: */
+    /* --nnrc-gray-50: #1F2937; */
+    /* --nnrc-gray-900: #F9FAFB; */
+  }
 }

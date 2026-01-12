@@ -70,10 +70,10 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
             className="absolute inset-0 bg-black/50"
             onClick={() => setIsOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-xl dark:bg-zinc-900">
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white border-2 border-nnrc-lavender p-8 shadow-xl">
             <button
               onClick={() => setIsOpen(false)}
-              className="cursor-pointer absolute right-4 top-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+              className="cursor-pointer absolute right-4 top-4 text-gray-400 hover:text-nnrc-purple-dark"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -92,18 +92,18 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
             </button>
 
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+              <h2 className="text-2xl font-bold text-nnrc-purple-dark">
                 Settings
               </h2>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <span className="text-sm font-medium text-gray-700">
                 Units
               </span>
               <div className="flex items-center gap-3">
                 <span
-                  className={`text-sm ${units === "imperial" ? "font-medium text-zinc-900 dark:text-zinc-50" : "text-zinc-400"}`}
+                  className={`text-sm ${units === "imperial" ? "font-medium text-nnrc-purple-dark" : "text-gray-400"}`}
                 >
                   Imperial
                 </span>
@@ -112,8 +112,8 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
                   disabled={isPending}
                   className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${
                     units === "metric"
-                      ? "bg-emerald-500"
-                      : "bg-zinc-300 dark:bg-zinc-600"
+                      ? "bg-nnrc-purple"
+                      : "bg-gray-300"
                   } ${isPending ? "opacity-50" : ""}`}
                   role="switch"
                   aria-checked={units === "metric"}
@@ -127,15 +127,15 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
                   />
                 </button>
                 <span
-                  className={`text-sm ${units === "metric" ? "font-medium text-zinc-900 dark:text-zinc-50" : "text-zinc-400"}`}
+                  className={`text-sm ${units === "metric" ? "font-medium text-nnrc-purple-dark" : "text-gray-400"}`}
                 >
                   Metric
                 </span>
               </div>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-700">
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
+            <div className="mt-6 pt-6 border-t border-nnrc-lavender">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Home Location (for weather)
               </label>
               <div className="flex gap-2">
@@ -145,17 +145,17 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
                   onChange={(e) => setZipCode(e.target.value)}
                   placeholder="Enter zip code"
                   maxLength={10}
-                  className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50"
+                  className="flex-1 rounded-lg border-2 border-nnrc-lavender bg-white px-3 py-2 text-sm text-gray-900 focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
                 />
                 <button
                   onClick={handleZipCodeSave}
                   disabled={isPending}
-                  className="cursor-pointer rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cursor-pointer rounded-lg bg-nnrc-purple px-4 py-2 text-sm font-medium text-white hover:bg-nnrc-purple-dark disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200"
                 >
                   {zipSaved ? "Saved!" : "Save"}
                 </button>
               </div>
-              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="mt-1 text-xs text-gray-500">
                 Used to auto-fill temperature based on your local weather
               </p>
             </div>
