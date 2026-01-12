@@ -6,7 +6,7 @@ import { ChallengeCard } from "@/components/ChallengeCard";
 import { ColdestRunWidget } from "@/components/ColdestRunWidget";
 import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
-import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry } from "@/services/ChallengeService";
+import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
 
 export default async function Home() {
@@ -20,6 +20,12 @@ export default async function Home() {
   let completedPositions: number[] = [];
   let coldestRun: ColdestRunInfo | null = null;
   let leaderboard: LeaderboardEntry[] = [];
+  
+  // Always fetch active challenges and all-time record for public display
+  const [activeChallenges, allTimeRecord] = await Promise.all([
+    ChallengeService.getActiveChallengesWithLeaderboards(),
+    ChallengeService.getAllTimeRecord(),
+  ]);
   
   if (session?.user?.id) {
     const [userChallenge, user, coldest, leaders] = await Promise.all([
@@ -101,7 +107,12 @@ export default async function Home() {
               {leaderboard.length > 0 && (
                 <LeaderboardWidget entries={leaderboard} />
               )}
-              <AllTimeRecordWidget name="Isaac Stoner" temperature={-30} />
+              {allTimeRecord && (
+                <AllTimeRecordWidget
+                  name={allTimeRecord.name}
+                  temperature={allTimeRecord.temperature}
+                />
+              )}
             </div>
           </div>
         ) : (
@@ -114,6 +125,62 @@ export default async function Home() {
                 Run together. No name needed.
               </p>
             </header>
+
+            {/* Two-column grid: Currently Running + Club Records */}
+            <section className="mb-12 grid gap-8 md:grid-cols-2">
+              {/* Currently Running - Left Column */}
+              <div>
+                <h2 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                  Currently Running
+                </h2>
+                {activeChallenges.length > 0 ? (
+                  <div className="space-y-6">
+                    {activeChallenges.map((challenge) => (
+                      <div
+                        key={challenge.id}
+                        className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900"
+                      >
+                        <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+                          {challenge.title}
+                        </h3>
+                        {challenge.leaderboard.length > 0 ? (
+                          <LeaderboardWidget entries={challenge.leaderboard} />
+                        ) : (
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                            No runs recorded yet. Be the first to log a run!
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                      No active challenges right now.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Club Records - Right Column */}
+              <div>
+                <h2 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                  Club Records
+                </h2>
+                {allTimeRecord ? (
+                  <AllTimeRecordWidget
+                    name={allTimeRecord.name}
+                    temperature={allTimeRecord.temperature}
+                  />
+                ) : (
+                  <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                      No records yet.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
 
             <section className="grid gap-8 md:grid-cols-3">
               <div className="rounded-2xl bg-white p-8 shadow-sm dark:bg-zinc-900">

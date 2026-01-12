@@ -22,6 +22,19 @@ export interface LeaderboardEntry {
   date: Date;
 }
 
+export interface AllTimeRecord {
+  name: string;
+  temperature: number;
+  date: Date;
+  challengeTitle: string;
+}
+
+export interface ActiveChallengeWithLeaderboard {
+  id: string;
+  title: string;
+  leaderboard: LeaderboardEntry[];
+}
+
 export class ChallengeService {
   /**
    * Gets the current active challenge.
@@ -153,5 +166,105 @@ export class ChallengeService {
     const seasonCapitalized =
       challenge.season.charAt(0).toUpperCase() + challenge.season.slice(1);
     return `${seasonCapitalized} ${challenge.year} Challenge`;
+  }
+
+  /**
+   * Gets all active challenges with their leaderboards.
+   */
+  static async getActiveChallengesWithLeaderboards(): Promise<ActiveChallengeWithLeaderboard[]> {
+    const activeChallenges = await prisma.challenge.findMany({
+      where: { current: true },
+    });
+
+    const result: ActiveChallengeWithLeaderboard[] = [];
+
+    for (const challenge of activeChallenges) {
+      const runs = await prisma.run.findMany({
+        where: {
+          userChallenge: {
+            challengeId: challenge.id,
+          },
+          temperature: { not: null },
+        },
+        orderBy: {
+          temperature: "asc",
+        },
+        include: {
+          userChallenge: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Get unique users with their coldest run
+      const userColdestRuns = new Map<string, LeaderboardEntry>();
+      for (const run of runs) {
+        const userId = run.userChallenge.userId;
+        if (!userColdestRuns.has(userId)) {
+          const fullName = run.userChallenge.user.name || "Anonymous";
+          const firstName = fullName.split(" ")[0];
+          userColdestRuns.set(userId, {
+            firstName,
+            temperature: run.temperature!,
+            date: run.date,
+          });
+        }
+      }
+
+      const leaderboard = Array.from(userColdestRuns.values()).sort(
+        (a, b) => a.temperature - b.temperature
+      );
+
+      result.push({
+        id: challenge.id,
+        title: this.formatChallengeTitle(challenge),
+        leaderboard,
+      });
+    }
+
+    return result;
+  }
+
+  /**
+   * Gets the all-time club record (coldest run across all challenges).
+   */
+  static async getAllTimeRecord(): Promise<AllTimeRecord | null> {
+    const coldestRun = await prisma.run.findFirst({
+      where: {
+        temperature: { not: null },
+      },
+      orderBy: {
+        temperature: "asc",
+      },
+      include: {
+        userChallenge: {
+          include: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+            challenge: true,
+          },
+        },
+      },
+    });
+
+    if (!coldestRun) {
+      return null;
+    }
+
+    return {
+      name: coldestRun.userChallenge.user.name || "Anonymous",
+      temperature: coldestRun.temperature!,
+      date: coldestRun.date,
+      challengeTitle: this.formatChallengeTitle(coldestRun.userChallenge.challenge),
+    };
   }
 }
