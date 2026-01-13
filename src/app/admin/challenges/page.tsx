@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ChallengeService } from "@/services/ChallengeService";
+import { ChallengesHelpPanel, ChallengeTableHeader } from "./ChallengesHelp";
 
 export default async function AdminChallengesPage() {
   const challenges = await prisma.challenge.findMany({
@@ -30,26 +31,18 @@ export default async function AdminChallengesPage() {
         </a>
       </div>
 
+      <ChallengesHelpPanel />
+
       {/* Challenges List */}
       <div className="rounded-xl bg-white border border-nnrc-lavender shadow-md overflow-hidden">
         <table className="w-full">
           <thead className="bg-nnrc-lavender-light">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Challenge
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Days
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Participants
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Runs
-              </th>
+              <ChallengeTableHeader field="challenge">Challenge</ChallengeTableHeader>
+              <ChallengeTableHeader field="status">Status</ChallengeTableHeader>
+              <ChallengeTableHeader field="days">Days</ChallengeTableHeader>
+              <ChallengeTableHeader field="participants">Participants</ChallengeTableHeader>
+              <ChallengeTableHeader field="runs">Runs</ChallengeTableHeader>
               <th className="px-6 py-3 text-right text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
                 Actions
               </th>

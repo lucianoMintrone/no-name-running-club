@@ -1,6 +1,14 @@
 import { AnalyticsService } from "@/services/AnalyticsService";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import {
+  AnalyticsHelpPanel,
+  AnalyticsStatCard,
+  EngagementCard,
+  ChallengeStatCard,
+  ChartTitleWithHelp,
+  analyticsHelp,
+} from "./AnalyticsHelp";
 
 async function getAnalyticsData() {
   const [overview, engagement, runsByDay, challenges] = await Promise.all([
@@ -57,23 +65,40 @@ export default async function AnalyticsPage() {
         </div>
       </div>
 
+      <AnalyticsHelpPanel />
+
       {/* Overview Stats */}
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
-        <StatCard title="Total Users" value={data.overview.totalUsers} />
-        <StatCard title="Total Runs" value={data.overview.totalRuns} />
-        <StatCard title="Challenges" value={data.overview.totalChallenges} />
-        <StatCard
+        <AnalyticsStatCard
+          title="Total Users"
+          value={data.overview.totalUsers}
+          helpText={analyticsHelp.overviewStats.totalUsers}
+        />
+        <AnalyticsStatCard
+          title="Total Runs"
+          value={data.overview.totalRuns}
+          helpText={analyticsHelp.overviewStats.totalRuns}
+        />
+        <AnalyticsStatCard
+          title="Challenges"
+          value={data.overview.totalChallenges}
+          helpText={analyticsHelp.overviewStats.challenges}
+        />
+        <AnalyticsStatCard
           title="Avg Runs/User"
           value={data.overview.averageRunsPerUser}
+          helpText={analyticsHelp.overviewStats.avgRunsPerUser}
         />
-        <StatCard
+        <AnalyticsStatCard
           title="New Users (Month)"
           value={data.overview.userGrowthThisMonth}
+          helpText={analyticsHelp.overviewStats.newUsersMonth}
           highlight
         />
-        <StatCard
+        <AnalyticsStatCard
           title="Runs (Month)"
           value={data.overview.runsThisMonth}
+          helpText={analyticsHelp.overviewStats.runsMonth}
           highlight
         />
       </div>
@@ -84,42 +109,36 @@ export default async function AnalyticsPage() {
           User Engagement
         </h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-lg bg-nnrc-lavender-light p-4">
-            <p className="text-sm text-gray-500">Active Users (7 days)</p>
-            <p className="text-2xl font-bold text-nnrc-purple-dark">
-              {data.engagement.activeUsersLast7Days}
-            </p>
-          </div>
-          <div className="rounded-lg bg-nnrc-lavender-light p-4">
-            <p className="text-sm text-gray-500">Active Users (30 days)</p>
-            <p className="text-2xl font-bold text-nnrc-purple-dark">
-              {data.engagement.activeUsersLast30Days}
-            </p>
-          </div>
-          <div className="rounded-lg bg-nnrc-lavender-light p-4">
-            <p className="text-sm text-gray-500">New Users (7 days)</p>
-            <p className="text-2xl font-bold text-nnrc-purple-dark">
-              {data.engagement.newUsersLast7Days}
-            </p>
-          </div>
-          <div className="rounded-lg bg-nnrc-lavender-light p-4">
-            <p className="text-sm text-gray-500">New Users (30 days)</p>
-            <p className="text-2xl font-bold text-nnrc-purple-dark">
-              {data.engagement.newUsersLast30Days}
-            </p>
-          </div>
-          <div className="rounded-lg bg-nnrc-lavender-light p-4">
-            <p className="text-sm text-gray-500">Runs (7 days)</p>
-            <p className="text-2xl font-bold text-nnrc-purple-dark">
-              {data.engagement.runsLast7Days}
-            </p>
-          </div>
-          <div className="rounded-lg bg-nnrc-lavender-light p-4">
-            <p className="text-sm text-gray-500">Runs (30 days)</p>
-            <p className="text-2xl font-bold text-nnrc-purple-dark">
-              {data.engagement.runsLast30Days}
-            </p>
-          </div>
+          <EngagementCard
+            label="Active Users (7 days)"
+            value={data.engagement.activeUsersLast7Days}
+            helpText={analyticsHelp.engagement.activeUsers7Days}
+          />
+          <EngagementCard
+            label="Active Users (30 days)"
+            value={data.engagement.activeUsersLast30Days}
+            helpText={analyticsHelp.engagement.activeUsers30Days}
+          />
+          <EngagementCard
+            label="New Users (7 days)"
+            value={data.engagement.newUsersLast7Days}
+            helpText={analyticsHelp.engagement.newUsers7Days}
+          />
+          <EngagementCard
+            label="New Users (30 days)"
+            value={data.engagement.newUsersLast30Days}
+            helpText={analyticsHelp.engagement.newUsers30Days}
+          />
+          <EngagementCard
+            label="Runs (7 days)"
+            value={data.engagement.runsLast7Days}
+            helpText={analyticsHelp.engagement.runs7Days}
+          />
+          <EngagementCard
+            label="Runs (30 days)"
+            value={data.engagement.runsLast30Days}
+            helpText={analyticsHelp.engagement.runs30Days}
+          />
         </div>
       </div>
 
@@ -130,50 +149,45 @@ export default async function AnalyticsPage() {
             Current Challenge: {data.currentChallengeStats.challengeName}
           </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-lg bg-nnrc-lavender-light p-4">
-              <p className="text-sm text-gray-500">Participants</p>
-              <p className="text-2xl font-bold text-nnrc-purple-dark">
-                {data.currentChallengeStats.totalParticipants}
-              </p>
-            </div>
-            <div className="rounded-lg bg-nnrc-lavender-light p-4">
-              <p className="text-sm text-gray-500">Total Runs</p>
-              <p className="text-2xl font-bold text-nnrc-purple-dark">
-                {data.currentChallengeStats.totalRuns}
-              </p>
-            </div>
-            <div className="rounded-lg bg-nnrc-lavender-light p-4">
-              <p className="text-sm text-gray-500">Completion Rate</p>
-              <p className="text-2xl font-bold text-nnrc-purple-dark">
-                {data.currentChallengeStats.completionRate}%
-              </p>
-              <p className="text-xs text-gray-400">
-                {data.currentChallengeStats.completedUsers} of{" "}
-                {data.currentChallengeStats.totalParticipants} completed
-              </p>
-            </div>
-            <div className="rounded-lg bg-nnrc-lavender-light p-4">
-              <p className="text-sm text-gray-500">Coldest Run</p>
-              <p className="text-2xl font-bold text-nnrc-purple-dark">
-                {data.currentChallengeStats.coldestRun !== null
+            <ChallengeStatCard
+              label="Participants"
+              value={data.currentChallengeStats.totalParticipants}
+              helpText={analyticsHelp.currentChallenge.participants}
+            />
+            <ChallengeStatCard
+              label="Total Runs"
+              value={data.currentChallengeStats.totalRuns}
+              helpText={analyticsHelp.currentChallenge.totalRuns}
+            />
+            <ChallengeStatCard
+              label="Completion Rate"
+              value={`${data.currentChallengeStats.completionRate}%`}
+              subtext={`${data.currentChallengeStats.completedUsers} of ${data.currentChallengeStats.totalParticipants} completed`}
+              helpText={analyticsHelp.currentChallenge.completionRate}
+            />
+            <ChallengeStatCard
+              label="Coldest Run"
+              value={
+                data.currentChallengeStats.coldestRun !== null
                   ? `${data.currentChallengeStats.coldestRun}°F`
-                  : "N/A"}
-              </p>
-              {data.currentChallengeStats.averageTemperature !== null && (
-                <p className="text-xs text-gray-400">
-                  Avg: {data.currentChallengeStats.averageTemperature}°F
-                </p>
-              )}
-            </div>
+                  : "N/A"
+              }
+              subtext={
+                data.currentChallengeStats.averageTemperature !== null
+                  ? `Avg: ${data.currentChallengeStats.averageTemperature}°F`
+                  : undefined
+              }
+              helpText={analyticsHelp.currentChallenge.coldestRun}
+            />
           </div>
         </div>
       )}
 
       {/* Runs Per Day Chart */}
       <div className="rounded-xl bg-white border border-nnrc-lavender p-6 shadow-md">
-        <h2 className="mb-4 text-lg font-semibold text-nnrc-purple-dark">
+        <ChartTitleWithHelp helpText={analyticsHelp.charts.runsPerDay}>
           Runs Per Day (Last 30 Days)
-        </h2>
+        </ChartTitleWithHelp>
         <div className="h-48">
           <div className="flex h-full items-end gap-1">
             {data.runsByDay.map((day, index) => (
@@ -227,14 +241,16 @@ export default async function AnalyticsPage() {
 
       {/* Temperature Distribution */}
       <div className="rounded-xl bg-white border border-nnrc-lavender p-6 shadow-md">
-        <h2 className="mb-4 text-lg font-semibold text-nnrc-purple-dark">
-          Temperature Distribution
+        <div className="mb-4 flex items-center">
+          <ChartTitleWithHelp helpText={analyticsHelp.charts.temperatureDistribution}>
+            Temperature Distribution
+          </ChartTitleWithHelp>
           {data.currentChallengeStats && (
             <span className="ml-2 text-sm font-normal text-gray-500">
               ({data.currentChallengeStats.challengeName})
             </span>
           )}
-        </h2>
+        </div>
         {data.tempDistribution.length > 0 ? (
           <div className="space-y-2">
             {data.tempDistribution.map((bucket) => (
@@ -328,36 +344,5 @@ async function ChallengeRow({
         </Link>
       </td>
     </tr>
-  );
-}
-
-function StatCard({
-  title,
-  value,
-  highlight = false,
-}: {
-  title: string;
-  value: number;
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-xl border p-4 shadow-md ${
-        highlight
-          ? "bg-nnrc-purple-light border-nnrc-purple"
-          : "bg-white border-nnrc-lavender"
-      }`}
-    >
-      <p className={`text-xs ${highlight ? "text-white/80" : "text-gray-500"}`}>
-        {title}
-      </p>
-      <p
-        className={`mt-1 text-2xl font-bold ${
-          highlight ? "text-white" : "text-nnrc-purple-dark"
-        }`}
-      >
-        {value}
-      </p>
-    </div>
   );
 }

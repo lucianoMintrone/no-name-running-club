@@ -1,6 +1,15 @@
 # NNRC Test Plan
 
-This document outlines manual testing procedures to run before each commit to prevent regressions.
+This document outlines both automated and manual testing procedures for the No Name Running Club application.
+
+---
+
+## Table of Contents
+
+1. [Quick Pre-Commit Checklist](#quick-pre-commit-checklist)
+2. [Automated Tests](#automated-tests)
+3. [Manual Testing Procedures](#manual-testing-procedures)
+4. [Known Issues & Workarounds](#known-issues--workarounds)
 
 ---
 
@@ -8,12 +17,188 @@ This document outlines manual testing procedures to run before each commit to pr
 
 Run these tests before every commit:
 
+- [ ] **Unit tests pass**: `yarn test:run` completes without errors
 - [ ] **Build passes**: `yarn build` completes without errors
 - [ ] **Type check passes**: `npx tsc --noEmit` has no errors
 - [ ] **Homepage loads** for logged-out users
 - [ ] **Sign in works** via Google OAuth
 - [ ] **Challenge card displays** for enrolled users
 - [ ] **Admin dashboard accessible** for admin users
+
+---
+
+## Automated Tests
+
+### Overview
+
+The project uses [Vitest](https://vitest.dev/) as the test framework with `vitest-mock-extended` for Prisma mocking. Tests are located alongside the source files with a `.test.ts` suffix.
+
+### Test Framework Configuration
+
+- **Config file**: [vitest.config.ts](../vitest.config.ts)
+- **Test setup**: [src/test/setup.ts](../src/test/setup.ts)
+- **Prisma mock**: [src/test/mocks/prisma.ts](../src/test/mocks/prisma.ts)
+
+### Running Tests
+
+#### Run All Tests (Watch Mode)
+```bash
+yarn test
+```
+This runs Vitest in watch mode - tests will re-run automatically when files change.
+
+#### Run All Tests Once
+```bash
+yarn test:run
+```
+This runs all tests once and exits. Use this for CI/CD or pre-commit checks.
+
+#### Run Tests with Coverage
+```bash
+yarn test:coverage
+```
+This generates a coverage report in the `coverage/` directory. Open `coverage/index.html` in a browser to view the detailed HTML report.
+
+#### Run Specific Test File
+```bash
+yarn test src/services/UserService.test.ts
+```
+
+#### Run Tests Matching a Pattern
+```bash
+yarn test --grep "should create a user"
+```
+
+### Current Test Suites
+
+#### 1. ChallengeService Tests
+**File**: [src/services/ChallengeService.test.ts](../src/services/ChallengeService.test.ts)
+
+Tests the challenge-related business logic:
+
+| Test Suite | Description |
+|------------|-------------|
+| `getCurrentChallenge` | Returns current challenge or null |
+| `getUserCurrentChallenge` | Returns user's enrolled challenge with runs |
+| `getColdestRun` | Finds coldest temperature run for a user |
+| `formatChallengeTitle` | Formats challenge title strings (e.g., "Winter 2025/2026 Challenge") |
+| `getChallengeLeaderboard` | Returns sorted leaderboard by temperature |
+| `getAllTimeRecord` | Returns all-time coldest run across all challenges |
+
+#### 2. UserService Tests
+**File**: [src/services/UserService.test.ts](../src/services/UserService.test.ts)
+
+Tests user management functionality:
+
+| Test Suite | Description |
+|------------|-------------|
+| `createUser` | Creates users, auto-enrolls in current challenge |
+| `findOrCreateUser` | OAuth flow - finds existing or creates new user |
+| `findById` | Finds user by ID |
+| `findByEmail` | Finds user by email address |
+| `updateUser` | Updates user profile (name, units, zipCode) |
+
+#### 3. AnalyticsService Tests
+**File**: [src/services/AnalyticsService.test.ts](../src/services/AnalyticsService.test.ts)
+
+Tests analytics and reporting functionality:
+
+| Test Suite | Description |
+|------------|-------------|
+| `getOverviewStats` | Returns high-level stats (users, runs, challenges, averages) |
+| `getChallengeParticipation` | Calculates participation stats for a challenge |
+| `getUserEngagement` | Returns engagement metrics (active users, new users) |
+| `getRunsByDay` | Groups runs by date for charting |
+| `getTemperatureDistribution` | Groups temperatures into histogram buckets |
+| `exportLeaderboard` | Generates ranked leaderboard for export |
+| `exportUsers` | Exports all users with stats |
+| `exportChallengeData` | Exports challenge with all run data |
+
+#### 4. WeatherService Tests
+**File**: [src/services/WeatherService.test.ts](../src/services/WeatherService.test.ts)
+
+Tests external weather API integration:
+
+| Test Suite | Description |
+|------------|-------------|
+| `getWeatherByZipCode` | Fetches weather from OpenWeatherMap API |
+| API key handling | Returns null when API key not configured |
+| Error handling | Handles API errors and network failures gracefully |
+| Response parsing | Handles missing/malformed weather data |
+
+#### 5. Share Utilities Tests
+**File**: [src/lib/share.test.ts](../src/lib/share.test.ts)
+
+Tests social sharing functionality:
+
+| Test Suite | Description |
+|------------|-------------|
+| `DEFAULT_SHARE_DATA` | Verifies default share content (title, text, URL) |
+| `supportsNativeShare` | Detects Web Share API availability |
+| `isIOSDevice` | Detects iOS devices for SMS URL format |
+| `triggerNativeShare` | Triggers native share dialog, handles success/cancel/failure |
+| `buildEmailShareUrl` | Builds properly encoded mailto: URLs |
+| `buildSmsShareUrl` | Builds platform-specific SMS URLs (iOS vs Android) |
+| `copyToClipboard` | Copies text to clipboard with Clipboard API |
+| `getShareUrl` | Gets current page URL for sharing |
+
+### Writing New Tests
+
+#### Test File Location
+Place test files next to the source file they test:
+```
+src/services/
+  ├── ChallengeService.ts
+  ├── ChallengeService.test.ts
+  ├── UserService.ts
+  └── UserService.test.ts
+```
+
+#### Mocking Prisma
+Import the Prisma mock and set up mocks before importing the service:
+
+```typescript
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { prismaMock } from "@/test/mocks/prisma";
+
+// Mock BEFORE importing the service
+vi.mock("@/lib/prisma", () => ({
+  prisma: prismaMock,
+}));
+
+// Import service AFTER mocking
+import { MyService } from "./MyService";
+
+describe("MyService", () => {
+  it("should do something", async () => {
+    // Arrange: Set up mock return values
+    prismaMock.user.findUnique.mockResolvedValue({ id: "123", name: "Test" });
+    
+    // Act: Call the service method
+    const result = await MyService.findUser("123");
+    
+    // Assert: Check the result
+    expect(result).toEqual({ id: "123", name: "Test" });
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+      where: { id: "123" },
+    });
+  });
+});
+```
+
+### Coverage Targets
+
+Current coverage is focused on the `src/services/` directory. Coverage reports are generated to:
+- `coverage/` - HTML report
+- Console output with text summary
+
+View coverage by opening `coverage/index.html` after running `yarn test:coverage`.
+
+---
+
+## Manual Testing Procedures
+
+The following sections outline manual testing procedures for features not yet covered by automated tests.
 
 ---
 
@@ -318,16 +503,38 @@ yarn build && npx tsc --noEmit
 
 ---
 
-## Automated Test Recommendations (Future)
+## Automated Test Roadmap
 
-1. **Unit tests** for services: `ChallengeService`, `UserService`, `AnalyticsService`
-2. **Integration tests** for server actions in `src/app/actions/`
-3. **E2E tests** with Playwright for critical user flows:
+### Currently Implemented ✅
+- **Unit tests** for `ChallengeService` (6 test suites, 13 tests)
+- **Unit tests** for `UserService` (5 test suites, 10 tests)
+- **Unit tests** for `AnalyticsService` (8 test suites, 15 tests)
+- **Unit tests** for `WeatherService` (1 test suite, 7 tests)
+- **Unit tests** for `Share Utilities` (8 test suites, 26 tests)
+- **Prisma mocking** infrastructure for isolated database testing
+- **Fetch mocking** for external API testing
+- **Browser API mocking** for navigator.share, clipboard, and user agent testing
+
+### Current Coverage
+| Service | Statements | Branches | Functions | Lines |
+|---------|------------|----------|-----------|-------|
+| AnalyticsService | 93% | 68% | 92% | 94% |
+| ChallengeService | 63% | 56% | 89% | 63% |
+| UserService | 100% | 100% | 100% | 100% |
+| WeatherService | 100% | 100% | 100% | 100% |
+| Share Utilities | 100% | 100% | 100% | 100% |
+| **Overall** | 89% | 75% | 94% | 88% |
+
+**Total Tests**: 71 tests across 29 test suites
+
+### Recommended Next Steps
+1. **Integration tests** for server actions in `src/app/actions/`
+2. **E2E tests** with Playwright for critical user flows:
    - Sign in → View challenge → Log run
    - Admin: Create challenge → Enroll users
-4. **API tests** for any REST endpoints
+3. **API tests** for any REST endpoints
 
 ---
 
 *Created: January 12, 2026*  
-*Last Updated: January 12, 2026*
+*Last Updated: January 13, 2026*

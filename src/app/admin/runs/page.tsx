@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { RunActions } from "./RunActions";
+import { RunsHelpPanel, RunTableHeader } from "./RunsHelp";
 
 export default async function AdminRunsPage() {
   const runs = await prisma.run.findMany({
@@ -30,26 +31,18 @@ export default async function AdminRunsPage() {
         </div>
       </div>
 
+      <RunsHelpPanel />
+
       {/* Runs List */}
       <div className="rounded-xl bg-white border border-nnrc-lavender shadow-md overflow-hidden">
         <table className="w-full">
           <thead className="bg-nnrc-lavender-light">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                User
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Challenge
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Run #
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Temperature
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Date
-              </th>
+              <RunTableHeader field="user">User</RunTableHeader>
+              <RunTableHeader field="challenge">Challenge</RunTableHeader>
+              <RunTableHeader field="runNumber">Run #</RunTableHeader>
+              <RunTableHeader field="temperature">Temperature</RunTableHeader>
+              <RunTableHeader field="date">Date</RunTableHeader>
               <th className="px-6 py-3 text-right text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
                 Actions
               </th>

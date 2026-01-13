@@ -174,6 +174,21 @@
 ### WeatherService
 - `getWeatherByZipCode(zipCode)` - Fetches current weather from OpenWeatherMap API
 
+### Share Utilities (`src/lib/share.ts`)
+- `supportsNativeShare()` - Checks if Web Share API is available
+- `isIOSDevice()` - Detects iOS devices for SMS URL formatting
+- `triggerNativeShare(data)` - Opens native share dialog on supported devices
+- `buildEmailShareUrl(data)` - Builds mailto: URL for email sharing
+- `buildSmsShareUrl(data)` - Builds SMS URL for text message sharing
+- `copyToClipboard(text)` - Copies text to clipboard
+- `getShareUrl()` - Gets current page URL for sharing
+
+### Admin Help Components (`src/components/help/`)
+- `InfoTooltip` - Inline tooltip with info icon for field definitions
+- `HelpPanel` - Collapsible page-level help panel with localStorage persistence
+- `FieldLabel` - Enhanced label component with integrated help tooltip
+- `KeyConcepts` - Bullet list of key concepts for help panels
+
 ---
 
 ## UI Components
@@ -188,6 +203,7 @@
 | `ColdestRunWidget` | Displays user's coldest run stats |
 | `LeaderboardWidget` | Shows challenge leaderboard |
 | `AllTimeRecordWidget` | Displays all-time club record |
+| `ShareWidget` | Social sharing button (native share on mobile, copy link on desktop) |
 
 ---
 

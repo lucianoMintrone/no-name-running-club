@@ -6,6 +6,7 @@ import { ChallengeCard } from "@/components/ChallengeCard";
 import { ColdestRunWidget } from "@/components/ColdestRunWidget";
 import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
+import { ShareWidget } from "@/components/ShareWidget";
 import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
@@ -193,34 +194,7 @@ export default async function Home() {
               </div>
             </section>
 
-            <section className="grid gap-8 md:grid-cols-3">
-              <div className="rounded-2xl bg-white border-2 border-nnrc-lavender p-8 shadow-md hover:shadow-lg transition-shadow duration-300">
-                <h2 className="mb-3 text-xl font-semibold text-nnrc-purple-dark">
-                  Community Runs
-                </h2>
-                <p className="text-gray-600">
-                  Join weekly group runs with runners of all levels.
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-white border-2 border-nnrc-lavender p-8 shadow-md hover:shadow-lg transition-shadow duration-300">
-                <h2 className="mb-3 text-xl font-semibold text-nnrc-purple-dark">
-                  Events
-                </h2>
-                <p className="text-gray-600">
-                  Races, social events, and everything in between.
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-white border-2 border-nnrc-lavender p-8 shadow-md hover:shadow-lg transition-shadow duration-300">
-                <h2 className="mb-3 text-xl font-semibold text-nnrc-purple-dark">
-                  Connect
-                </h2>
-                <p className="text-gray-600">
-                  Meet fellow runners and build lasting friendships.
-                </p>
-              </div>
-            </section>
+            <ShareWidget />
           </>
         )}
       </main>

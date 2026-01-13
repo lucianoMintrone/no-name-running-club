@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createChallenge } from "@/app/actions/admin";
+import { FieldLabel, InfoTooltip } from "@/components/help";
+import { challengesHelp } from "@/components/admin/help-content";
 
 export default function NewChallengePage() {
   const router = useRouter();
@@ -47,12 +49,9 @@ export default function NewChallengePage() {
         )}
 
         <div>
-          <label
-            htmlFor="season"
-            className="block text-sm font-medium text-nnrc-purple-dark mb-1"
-          >
+          <FieldLabel htmlFor="season" helpText={challengesHelp.formFields.season} required>
             Season
-          </label>
+          </FieldLabel>
           <select
             id="season"
             name="season"
@@ -65,12 +64,9 @@ export default function NewChallengePage() {
         </div>
 
         <div>
-          <label
-            htmlFor="year"
-            className="block text-sm font-medium text-nnrc-purple-dark mb-1"
-          >
+          <FieldLabel htmlFor="year" helpText={challengesHelp.formFields.year} required>
             Year
-          </label>
+          </FieldLabel>
           <input
             type="text"
             id="year"
@@ -85,12 +81,9 @@ export default function NewChallengePage() {
         </div>
 
         <div>
-          <label
-            htmlFor="daysCount"
-            className="block text-sm font-medium text-nnrc-purple-dark mb-1"
-          >
+          <FieldLabel htmlFor="daysCount" helpText={challengesHelp.formFields.daysCount} required>
             Number of Days
-          </label>
+          </FieldLabel>
           <input
             type="number"
             id="daysCount"
@@ -112,9 +105,10 @@ export default function NewChallengePage() {
           />
           <label
             htmlFor="current"
-            className="text-sm font-medium text-nnrc-purple-dark"
+            className="text-sm font-medium text-nnrc-purple-dark inline-flex items-center"
           >
             Set as current (active) challenge
+            <InfoTooltip content={challengesHelp.formFields.current} />
           </label>
         </div>
 
@@ -127,9 +121,10 @@ export default function NewChallengePage() {
           />
           <label
             htmlFor="enrollAll"
-            className="text-sm font-medium text-nnrc-purple-dark"
+            className="text-sm font-medium text-nnrc-purple-dark inline-flex items-center"
           >
             Automatically enroll all existing users
+            <InfoTooltip content={challengesHelp.formFields.enrollAll} />
           </label>
         </div>
 

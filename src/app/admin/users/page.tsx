@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { UsersHelpPanel, UserTableHeader } from "./UsersHelp";
 
 export default async function AdminUsersPage() {
   const users = await prisma.user.findMany({
@@ -27,26 +28,18 @@ export default async function AdminUsersPage() {
         </div>
       </div>
 
+      <UsersHelpPanel />
+
       {/* Users List */}
       <div className="rounded-xl bg-white border border-nnrc-lavender shadow-md overflow-hidden">
         <table className="w-full">
           <thead className="bg-nnrc-lavender-light">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                User
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Challenges
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Total Runs
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
-                Joined
-              </th>
+              <UserTableHeader field="user">User</UserTableHeader>
+              <UserTableHeader field="role">Role</UserTableHeader>
+              <UserTableHeader field="challenges">Challenges</UserTableHeader>
+              <UserTableHeader field="totalRuns">Total Runs</UserTableHeader>
+              <UserTableHeader field="joined">Joined</UserTableHeader>
               <th className="px-6 py-3 text-right text-xs font-medium text-nnrc-purple-dark uppercase tracking-wider">
                 Actions
               </th>
