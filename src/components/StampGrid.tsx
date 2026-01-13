@@ -14,17 +14,17 @@ export function StampGrid({
   const stamps = Array.from({ length: totalStamps }, (_, i) => i + 1);
 
   return (
-    <div className="grid grid-cols-5 gap-4">
+    <div className="grid grid-cols-5 gap-3">
       {stamps.map((number) => {
         const isCompleted = completedPositions.includes(number);
         return (
           <button
             key={number}
             onClick={() => onStampClick?.(number)}
-            className={`flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-200 ${
+            className={`flex h-14 w-14 cursor-pointer items-center justify-center rounded-full transition-all duration-150 ${
               isCompleted
-                ? "border-nnrc-purple bg-nnrc-lavender-light shadow-purple-sm"
-                : "border-nnrc-lavender bg-white text-base font-semibold text-gray-500 hover:border-nnrc-purple hover:text-nnrc-purple hover:shadow-purple-sm"
+                ? "bg-nnrc-purple/10 shadow-sm ring-2 ring-nnrc-purple/30"
+                : "bg-white shadow-sm text-base font-semibold text-gray-400 hover:shadow-md hover:text-nnrc-purple hover:-translate-y-0.5 active:scale-95"
             }`}
           >
             {isCompleted ? (
@@ -42,7 +42,7 @@ export function StampGrid({
       {onAddDay && (
         <button
           onClick={onAddDay}
-          className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-2 border-dashed border-nnrc-lavender text-xl font-light text-gray-400 transition-all duration-200 hover:border-nnrc-purple hover:text-nnrc-purple"
+          className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border-2 border-dashed border-gray-200 text-xl font-light text-gray-300 transition-all duration-150 hover:border-nnrc-purple hover:text-nnrc-purple hover:bg-nnrc-purple/5"
           aria-label="Add day"
         >
           +

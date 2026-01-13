@@ -15,35 +15,37 @@ export function ColdestRunWidget({
   });
 
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-nnrc-lavender-light to-white border border-nnrc-lavender p-6 shadow-md">
+    <div className="rounded-2xl bg-white p-5 shadow-card hover:shadow-card-hover transition-all duration-200">
       <div className="mb-3 flex items-center gap-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-nnrc-purple"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-          />
-        </svg>
-        <h3 className="text-sm font-medium text-nnrc-purple-dark">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-50">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 text-sky-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+          </svg>
+        </div>
+        <h3 className="text-sm font-semibold text-gray-900">
           Coldest Run
         </h3>
       </div>
       
       <div className="flex items-baseline gap-1">
-        <span className="text-4xl font-bold text-nnrc-temp-cold">
+        <span className="text-5xl font-black tracking-tight text-nnrc-temp-extreme-cold">
           {temperature}°
         </span>
-        <span className="text-lg text-gray-400">F</span>
+        <span className="text-xl font-medium text-gray-300">F</span>
       </div>
       
-      <div className="mt-2 text-sm text-gray-500">
+      <div className="mt-3 text-sm text-gray-400">
         Run #{runNumber} • {formattedDate}
       </div>
     </div>

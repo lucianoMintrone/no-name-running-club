@@ -39,7 +39,7 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="cursor-pointer rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+        className="cursor-pointer rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors duration-150"
         aria-label="Settings"
       >
         <svg
@@ -67,13 +67,13 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/50"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white border-2 border-nnrc-lavender p-8 shadow-xl">
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl animate-fadeIn">
             <button
               onClick={() => setIsOpen(false)}
-              className="cursor-pointer absolute right-4 top-4 text-gray-400 hover:text-nnrc-purple-dark"
+              className="cursor-pointer absolute right-4 top-4 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
             </button>
 
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-nnrc-purple-dark">
+              <h2 className="text-2xl font-bold text-gray-900">
                 Settings
               </h2>
             </div>
@@ -147,12 +147,12 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
                   onChange={(e) => setZipCode(e.target.value)}
                   placeholder="Enter zip code"
                   maxLength={10}
-                  className="flex-1 rounded-lg border-2 border-nnrc-lavender bg-white px-3 py-2 text-sm text-gray-900 focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
+                  className="flex-1 rounded-xl bg-gray-50 px-4 py-2.5 text-sm text-gray-900 focus:bg-white focus:ring-2 focus:ring-nnrc-purple focus:outline-none transition-all duration-150"
                 />
                 <button
                   onClick={handleZipCodeSave}
                   disabled={isPending}
-                  className="cursor-pointer rounded-lg bg-nnrc-purple px-4 py-2 text-sm font-medium text-white hover:bg-nnrc-purple-dark disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200"
+                  className="cursor-pointer rounded-xl bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150"
                 >
                   {zipSaved ? "Saved!" : "Save"}
                 </button>

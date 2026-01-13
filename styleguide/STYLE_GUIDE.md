@@ -15,18 +15,27 @@
 
 ## Brand Overview
 
-**No Name Running Club (NNRC)** embodies a vintage athletic aesthetic with a modern, community-focused approach to running challenges. The brand celebrates perseverance, cold-weather dedication, and the camaraderie of shared accomplishments.
+**No Name Running Club (NNRC)** is a modern fitness app designed for cold-weather running challenges. The brand celebrates perseverance, achievement, and the camaraderie of shared accomplishments through bold metrics and a clean, performance-focused interface.
 
 ### Brand Personality
-- **Vintage Athletic**: Inspired by classic sports team aesthetics
+- **Modern Athletic**: Clean, bold design inspired by Nike Run Club and Strava
+- **Performance-Focused**: Large hero metrics that celebrate achievements
 - **Approachable**: Welcoming to runners of all levels
-- **Resilient**: Emphasizing the challenge of outdoor running
 - **Community-Driven**: Celebrating collective achievements
 
 ### Visual Identity
-- Purple/lavender color scheme evokes twilight runs and winter landscapes
-- The runner mascot represents every member's journey
-- The "NNRC" patch logo suggests team membership and earned status
+- **Modern indigo color palette** conveys energy and achievement
+- **Shadow-based elevation** creates clean, modern depth
+- **Bold typography** for metrics creates instant visual impact
+- **Subtle micro-animations** add polish and delight
+
+### Design Philosophy
+The design follows modern fitness app conventions:
+1. **Clean backgrounds** (#FAFAFA) with bold accent colors
+2. **Shadow-based cards** instead of borders for clean elevation
+3. **Large hero metrics** (48-60px font) that command attention
+4. **Pill-shaped buttons** with gradient fills for CTAs
+5. **Smooth transitions** (150ms ease-out) for responsive feel
 
 ---
 
@@ -88,68 +97,101 @@ The runner mascot represents the spirit of the club:
 
 ### Primary Colors
 
-#### Primary Purple
+#### Primary Indigo
 ```css
---nnrc-purple-primary: #A999C6;
+--nnrc-purple-primary: #6366F1;
 ```
-- **RGB**: 169, 153, 198
-- **Usage**: Main UI elements, primary buttons, headers
-- **Accessibility**: WCAG AA compliant on white backgrounds
+- **RGB**: 99, 102, 241
+- **Usage**: Primary buttons, key metrics, active states
+- **Accessibility**: WCAG AAA compliant on white backgrounds
 
-#### Accent Lavender
+#### Primary Dark
 ```css
---nnrc-lavender-accent: #D2C1DD;
+--nnrc-purple-dark: #4F46E5;
 ```
-- **RGB**: 210, 193, 221
-- **Usage**: Backgrounds, hover states, secondary elements
-- **Accessibility**: Use with dark text for readability
+- **RGB**: 79, 70, 229
+- **Usage**: Hover states, pressed buttons, emphasis text
 
-### Secondary Colors
-
-#### Deep Purple (Darker Shade)
+#### Primary Light
 ```css
---nnrc-purple-dark: #7A6C94;
+--nnrc-purple-light: #818CF8;
 ```
-- **Usage**: Text on light backgrounds, active states, borders
+- **RGB**: 129, 140, 248
+- **Usage**: Secondary elements, subtle highlights
 
-#### Light Lavender (Lighter Shade)
+### Background Colors
+
+#### Surface Background
 ```css
---nnrc-lavender-light: #E8E0EE;
+--nnrc-lavender-primary: #F1F5F9;  /* Slate-100 */
 ```
-- **Usage**: Subtle backgrounds, disabled states, dividers
+- **Usage**: Page backgrounds, subtle containers
+
+#### Surface Accent
+```css
+--nnrc-lavender-dark: #E2E8F0;  /* Slate-200 */
+```
+- **Usage**: Hover states on backgrounds, dividers
+
+#### Surface Light
+```css
+--nnrc-lavender-light: #F8FAFC;  /* Slate-50 */
+```
+- **Usage**: Card backgrounds, elevated surfaces
 
 ### Neutral Colors
 
 ```css
 --nnrc-white: #FFFFFF;
---nnrc-gray-50: #F9FAFB;
---nnrc-gray-100: #F3F4F6;
---nnrc-gray-200: #E5E7EB;
---nnrc-gray-300: #D1D5DB;
---nnrc-gray-600: #4B5563;
---nnrc-gray-800: #1F2937;
---nnrc-gray-900: #111827;
---nnrc-black: #000000;
+--nnrc-gray-50: #FAFAFA;    /* Page background */
+--nnrc-gray-100: #F5F5F5;
+--nnrc-gray-200: #E5E5E5;
+--nnrc-gray-300: #D4D4D4;
+--nnrc-gray-400: #A3A3A3;   /* Placeholder text */
+--nnrc-gray-500: #737373;   /* Secondary text */
+--nnrc-gray-600: #525252;   /* Body text */
+--nnrc-gray-700: #404040;
+--nnrc-gray-800: #262626;   /* Headings */
+--nnrc-gray-900: #171717;   /* Primary text */
+--nnrc-black: #0A0A0A;
 ```
 
 ### Semantic Colors
 
 ```css
---nnrc-success: #10B981; /* Green for completed runs */
+--nnrc-success: #22C55E; /* Green for completed runs */
 --nnrc-warning: #F59E0B; /* Amber for warnings */
 --nnrc-error: #EF4444;   /* Red for errors */
---nnrc-info: #3B82F6;    /* Blue for info */
+--nnrc-info: #0EA5E9;    /* Sky blue for info */
 ```
 
 ### Temperature Gradient
-For temperature-based visualizations:
+For temperature-based visualizations (cold weather challenges):
 
 ```css
---nnrc-temp-extreme-cold: #3B82F6;  /* Below 0°F - Blue */
---nnrc-temp-very-cold: #6366F1;     /* 0-15°F - Indigo */
---nnrc-temp-cold: #8B5CF6;          /* 15-30°F - Purple */
---nnrc-temp-cool: #A78BFA;          /* 30-40°F - Light purple */
---nnrc-temp-mild: #C4B5FD;          /* Above 40°F - Lightest purple */
+--nnrc-temp-extreme-cold: #0EA5E9;  /* Below 0°F - Sky Blue */
+--nnrc-temp-very-cold: #3B82F6;     /* 0-15°F - Blue */
+--nnrc-temp-cold: #6366F1;          /* 15-30°F - Indigo */
+--nnrc-temp-cool: #8B5CF6;          /* 30-40°F - Violet */
+--nnrc-temp-mild: #A78BFA;          /* Above 40°F - Light violet */
+```
+
+### Gradients
+
+```css
+/* Primary gradient for buttons and CTAs */
+--gradient-primary: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+--gradient-primary-hover: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+
+/* Surface gradients for cards */
+--gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+
+/* Hero gradient for special features */
+--gradient-hero: linear-gradient(135deg, #6366F1 0%, #0EA5E9 100%);
+
+/* Temperature gradients */
+--gradient-cold: linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%);
+--gradient-warm: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
 ```
 
 ### Tailwind Configuration
@@ -162,21 +204,23 @@ export default {
       colors: {
         nnrc: {
           purple: {
-            DEFAULT: '#A999C6',
-            dark: '#7A6C94',
-            light: '#C4B0DB',
+            DEFAULT: '#6366F1',
+            dark: '#4F46E5',
+            light: '#818CF8',
+            50: '#EEF2FF',
+            100: '#E0E7FF',
           },
           lavender: {
-            DEFAULT: '#D2C1DD',
-            dark: '#BBA8C9',
-            light: '#E8E0EE',
+            DEFAULT: '#F1F5F9',
+            dark: '#E2E8F0',
+            light: '#F8FAFC',
           },
           temp: {
-            'extreme-cold': '#3B82F6',
-            'very-cold': '#6366F1',
-            'cold': '#8B5CF6',
-            'cool': '#A78BFA',
-            'mild': '#C4B5FD',
+            'extreme-cold': '#0EA5E9',
+            'very-cold': '#3B82F6',
+            'cold': '#6366F1',
+            'cool': '#8B5CF6',
+            'mild': '#A78BFA',
           },
         },
       },
@@ -270,20 +314,21 @@ font-weight: 700-900;
 
 ### Buttons
 
-#### Primary Button
+#### Primary Button (Gradient)
 ```tsx
 <button className="
   px-6 py-3 
-  bg-nnrc-purple 
+  bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light
   text-white 
-  rounded-lg 
+  rounded-xl 
   font-semibold
-  hover:bg-nnrc-purple-dark 
-  active:scale-95
+  hover:from-nnrc-purple-dark hover:to-nnrc-purple
+  active:scale-[0.98]
   transition-all 
-  duration-200
+  duration-150
   shadow-md
   hover:shadow-lg
+  hover:-translate-y-0.5
 ">
   Log Run
 </button>
@@ -293,14 +338,16 @@ font-weight: 700-900;
 ```tsx
 <button className="
   px-6 py-3 
-  bg-nnrc-lavender 
-  text-nnrc-purple-dark 
-  rounded-lg 
+  bg-white
+  text-nnrc-purple 
+  rounded-xl 
   font-semibold
-  hover:bg-nnrc-lavender-dark 
-  active:scale-95
+  shadow-card
+  hover:shadow-card-hover
+  hover:-translate-y-0.5
+  active:scale-[0.98]
   transition-all 
-  duration-200
+  duration-150
 ">
   View Leaderboard
 </button>
@@ -312,15 +359,12 @@ font-weight: 700-900;
   px-6 py-3 
   bg-transparent 
   text-nnrc-purple 
-  rounded-lg 
+  rounded-xl 
   font-semibold
-  border-2 
-  border-nnrc-purple
-  hover:bg-nnrc-purple 
-  hover:text-white
-  active:scale-95
+  hover:bg-nnrc-purple/5
+  active:scale-[0.98]
   transition-all 
-  duration-200
+  duration-150
 ">
   Cancel
 </button>
@@ -328,26 +372,46 @@ font-weight: 700-900;
 
 ### Cards
 
-#### Challenge Card
+#### Modern Card (Shadow-based Elevation)
 ```tsx
 <div className="
   bg-white 
   rounded-2xl 
-  border-2 
-  border-nnrc-lavender
-  shadow-lg 
+  shadow-card
   p-6
-  hover:shadow-xl
-  transition-shadow 
-  duration-300
+  hover:shadow-card-hover
+  hover:-translate-y-1
+  transition-all 
+  duration-200
 ">
-  <h3 className="text-2xl font-bold text-nnrc-purple-dark mb-2">
+  <h3 className="text-2xl font-bold text-gray-900 mb-2">
     Winter 2025/2026 Challenge
   </h3>
-  <p className="text-gray-600 mb-4">
-    5 of 30 runs (17%)
+  <p className="text-gray-500 mb-4">
+    5 of 30 runs completed
   </p>
   {/* Card content */}
+</div>
+```
+
+#### Hero Metric Card
+```tsx
+<div className="
+  bg-white 
+  rounded-2xl 
+  shadow-card
+  p-6
+  text-center
+">
+  <span className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+    Coldest Run
+  </span>
+  <div className="text-hero font-black text-nnrc-purple mt-2">
+    -12°F
+  </div>
+  <span className="text-sm text-gray-400 mt-1">
+    January 5th, 2026
+  </span>
 </div>
 ```
 
@@ -355,15 +419,16 @@ font-weight: 700-900;
 ```tsx
 <div className="
   bg-gradient-to-br 
-  from-nnrc-lavender-light 
-  to-white
-  rounded-xl 
-  border 
-  border-nnrc-lavender
+  from-white 
+  to-slate-50
+  rounded-2xl 
+  shadow-card
   p-5
-  shadow-md
+  hover:shadow-card-hover
+  transition-shadow 
+  duration-200
 ">
-  <h4 className="text-lg font-semibold text-nnrc-purple-dark mb-3">
+  <h4 className="text-lg font-semibold text-gray-900 mb-3">
     Your Coldest Run
   </h4>
   {/* Widget content */}
@@ -382,14 +447,13 @@ The stamp grid is the signature UI element of NNRC:
       className="
         aspect-square 
         rounded-full 
-        border-2 
-        border-nnrc-lavender
         bg-white
-        hover:border-nnrc-purple
+        shadow-sm
+        hover:shadow-md
         hover:scale-105
         active:scale-95
         transition-all 
-        duration-200
+        duration-150
         flex 
         items-center 
         justify-center
@@ -704,36 +768,53 @@ import {
 
 ## Animations & Interactions
 
+### Design Principles
+- **Fast & Responsive**: 100-150ms for most interactions
+- **Smooth & Polished**: ease-out for natural deceleration
+- **Subtle & Purposeful**: Animations should enhance, not distract
+- **Performance First**: Use transform and opacity for GPU acceleration
+
 ### Transitions
 
 ```css
-/* Quick interactions */
-.transition-quick {
-  transition: all 150ms ease-in-out;
+/* Instant feedback (buttons, toggles) */
+.transition-fast {
+  transition: all 100ms ease-out;
 }
 
-/* Standard transitions */
-.transition-standard {
-  transition: all 200ms ease-in-out;
+/* Standard interactions (cards, links) */
+.transition-base {
+  transition: all 150ms ease-out;
 }
 
-/* Smooth transitions */
-.transition-smooth {
-  transition: all 300ms ease-out;
+/* Smooth transitions (modals, overlays) */
+.transition-slow {
+  transition: all 250ms ease-out;
+}
+
+/* Spring easing for playful elements */
+.transition-spring {
+  transition: all 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 ```
 
-### Hover States
+### Hover States (Modern Card Lift)
 
 ```css
-/* Scale up slightly */
-.hover-scale:hover {
-  transform: scale(1.05);
+/* Card hover lift effect */
+.hover-lift {
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
 }
 
-/* Lift with shadow */
 .hover-lift:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+/* Button press effect */
+.active-scale:active {
+  transform: scale(0.98);
+}
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 ```

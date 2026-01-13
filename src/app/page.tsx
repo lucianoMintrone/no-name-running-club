@@ -53,21 +53,21 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-nnrc-lavender-light">
-      <nav className="border-b border-nnrc-lavender bg-white">
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow-sm sticky top-0 z-40">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-          <span className="font-bold text-nnrc-purple-dark text-lg">
+          <span className="font-bold text-gray-900 text-lg tracking-tight">
             NNRC
           </span>
           {session?.user ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-500">
                 {session.user.name || session.user.email}
               </span>
               {isAdmin(session.user.role) && (
                 <Link
                   href="/admin"
-                  className="rounded-lg bg-nnrc-purple px-3 py-1.5 text-xs font-medium text-white hover:bg-nnrc-purple-dark transition-colors duration-200"
+                  className="rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-gray-800 transition-colors duration-150"
                 >
                   Admin
                 </Link>
@@ -77,13 +77,13 @@ export default async function Home() {
                 <img
                   src={session.user.image}
                   alt=""
-                  className="h-8 w-8 rounded-full border-2 border-nnrc-lavender"
+                  className="h-8 w-8 rounded-full ring-2 ring-gray-100"
                 />
               )}
               <form action={signOutUser}>
                 <button
                   type="submit"
-                  className="cursor-pointer rounded-lg bg-nnrc-lavender px-4 py-2 text-sm font-medium text-nnrc-purple-dark hover:bg-nnrc-lavender-dark transition-colors duration-200"
+                  className="cursor-pointer rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-150"
                 >
                   Sign out
                 </button>
@@ -128,11 +128,11 @@ export default async function Home() {
           </div>
         ) : (
           <>
-            <header className="mb-16 pt-8 text-center">
-              <h1 className="mb-4 text-5xl font-bold tracking-tight text-nnrc-purple-dark">
+            <header className="mb-16 pt-12 text-center">
+              <h1 className="mb-4 text-5xl font-black tracking-tight text-gray-900">
                 No Name Running Club
               </h1>
-              <p className="text-xl text-nnrc-purple">
+              <p className="text-xl text-gray-500">
                 Run together. No name needed.
               </p>
             </header>
@@ -141,7 +141,7 @@ export default async function Home() {
             <section className="mb-12 grid gap-8 md:grid-cols-2">
               {/* Currently Running - Left Column */}
               <div>
-                <h2 className="mb-6 text-2xl font-bold text-nnrc-purple-dark">
+                <h2 className="mb-6 text-xl font-bold text-gray-900">
                   Currently Running
                 </h2>
                 {activeChallenges.length > 0 ? (
@@ -149,15 +149,15 @@ export default async function Home() {
                     {activeChallenges.map((challenge) => (
                       <div
                         key={challenge.id}
-                        className="rounded-2xl bg-white border-2 border-nnrc-lavender p-6 shadow-md"
+                        className="rounded-2xl bg-white p-6 shadow-card"
                       >
-                        <h3 className="mb-4 text-lg font-semibold text-nnrc-purple-dark">
+                        <h3 className="mb-4 text-lg font-semibold text-gray-900">
                           {challenge.title}
                         </h3>
                         {challenge.leaderboard.length > 0 ? (
                           <LeaderboardWidget entries={challenge.leaderboard} />
                         ) : (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-400">
                             No runs recorded yet. Be the first to log a run!
                           </p>
                         )}
@@ -165,8 +165,8 @@ export default async function Home() {
                     ))}
                   </div>
                 ) : (
-                  <div className="rounded-2xl bg-white border-2 border-nnrc-lavender p-6 shadow-md">
-                    <p className="text-sm text-gray-500">
+                  <div className="rounded-2xl bg-white p-6 shadow-card">
+                    <p className="text-sm text-gray-400">
                       No active challenges right now.
                     </p>
                   </div>
@@ -175,7 +175,7 @@ export default async function Home() {
 
               {/* Club Records - Right Column */}
               <div>
-                <h2 className="mb-6 text-2xl font-bold text-nnrc-purple-dark">
+                <h2 className="mb-6 text-xl font-bold text-gray-900">
                   Club Records
                 </h2>
                 {allTimeRecord ? (
@@ -185,8 +185,8 @@ export default async function Home() {
                     image={allTimeRecord.image}
                   />
                 ) : (
-                  <div className="rounded-2xl bg-white border-2 border-nnrc-lavender p-6 shadow-md">
-                    <p className="text-sm text-gray-500">
+                  <div className="rounded-2xl bg-white p-6 shadow-card">
+                    <p className="text-sm text-gray-400">
                       No records yet.
                     </p>
                   </div>

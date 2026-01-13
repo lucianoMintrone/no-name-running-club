@@ -78,11 +78,11 @@ export function RunFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white border-2 border-nnrc-lavender p-6 shadow-xl">
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative z-10 w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl animate-fadeIn">
         <button
           onClick={onClose}
-          className="cursor-pointer absolute right-4 top-4 text-gray-400 hover:text-nnrc-purple-dark"
+          className="cursor-pointer absolute right-4 top-4 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,7 @@ export function RunFormModal({
         </button>
 
         <div className="mb-6 text-center">
-          <h2 className="text-xl font-bold text-nnrc-purple-dark">
+          <h2 className="text-xl font-bold text-gray-900">
             Run #{position}
           </h2>
           <p className="mt-1 text-sm text-gray-500">
@@ -112,7 +112,7 @@ export function RunFormModal({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center justify-center gap-2">
             {isLoadingWeather ? (
-              <div className="w-24 h-14 rounded-lg border-2 border-nnrc-lavender bg-nnrc-lavender-light flex items-center justify-center">
+              <div className="w-24 h-14 rounded-xl bg-gray-50 flex items-center justify-center">
                 <svg className="animate-spin h-5 w-5 text-nnrc-purple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -125,16 +125,16 @@ export function RunFormModal({
                 onChange={(e) => setTemperature(e.target.value)}
                 placeholder="32"
                 autoFocus
-                className="w-24 rounded-lg border border-zinc-300 bg-white px-4 py-3 text-center text-2xl font-semibold text-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-50"
+                className="w-24 rounded-xl bg-gray-50 px-4 py-3 text-center text-2xl font-bold text-gray-900 focus:bg-white focus:ring-2 focus:ring-nnrc-purple focus:outline-none transition-all duration-150"
               />
             )}
-            <span className="text-xl font-medium text-zinc-500 dark:text-zinc-400">
+            <span className="text-xl font-medium text-gray-400">
               °F
             </span>
           </div>
 
           {error && (
-            <p className="text-center text-sm text-red-500 dark:text-red-400">
+            <p className="text-center text-sm text-red-500">
               {error}
             </p>
           )}
@@ -142,7 +142,7 @@ export function RunFormModal({
           <button
             type="submit"
             disabled={isPending || !temperature}
-            className="w-full cursor-pointer rounded-lg bg-emerald-500 px-4 py-3 font-medium text-white hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full cursor-pointer rounded-xl bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-4 py-3 font-semibold text-white shadow-purple-md hover:shadow-purple-lg hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 transition-all duration-150"
           >
             {isPending ? "Saving..." : "Log Run"}
           </button>

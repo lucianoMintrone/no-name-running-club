@@ -39,19 +39,19 @@ export function ChallengeCard({
   };
 
   return (
-    <div className="mx-auto max-w-md rounded-2xl bg-white border-2 border-nnrc-lavender p-6 shadow-lg">
+    <div className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-card hover:shadow-card-hover transition-all duration-200">
       <div className="mb-4 text-center">
-        <h2 className="mb-1 text-xl font-bold text-nnrc-purple-dark">
+        <h2 className="mb-1 text-xl font-bold text-gray-900">
           {title}
         </h2>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-500">
           {completedCount} of {daysCount} runs ({progress}%)
         </p>
       </div>
       {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mb-5">
+      <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden mb-5">
         <div 
-          className="bg-gradient-to-r from-nnrc-purple to-nnrc-lavender h-full rounded-full transition-all duration-500 ease-out"
+          className="bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light h-full rounded-full transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
