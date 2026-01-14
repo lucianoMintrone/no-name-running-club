@@ -40,7 +40,7 @@ export function ShareWidget() {
   };
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-card text-center">
+    <div className="rounded-xl bg-white p-6 shadow-card text-center">
       <h2 className="mb-2 text-lg font-bold text-gray-900">
         Spread the Word
       </h2>
@@ -50,7 +50,7 @@ export function ShareWidget() {
 
       <button
         onClick={handleShare}
-        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
+        className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
         aria-label={copied ? "Link copied!" : hasNativeShare ? "Share the club" : "Copy link"}
       >
         {copied ? (

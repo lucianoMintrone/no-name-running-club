@@ -14,7 +14,7 @@ export function LeaderboardWidget({ entries }: LeaderboardWidgetProps) {
   }
 
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-card hover:shadow-card-hover transition-all duration-200">
+    <div className="rounded-xl bg-white p-5 shadow-card hover:shadow-card-hover transition-all duration-200">
       <div className="mb-4 flex items-center gap-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-nnrc-purple/10">
           <svg

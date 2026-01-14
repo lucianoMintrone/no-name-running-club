@@ -127,7 +127,7 @@ export function ChallengeCard({
   return (
     <div className="
       bg-white 
-      rounded-2xl 
+      rounded-xl 
       border-2 
       border-nnrc-lavender
       shadow-lg 
@@ -468,7 +468,7 @@ export function Modal({
       <div 
         className="
           bg-white 
-          rounded-2xl 
+          rounded-xl 
           shadow-2xl 
           max-w-md 
           w-full

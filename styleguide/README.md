@@ -150,7 +150,7 @@ export default function MyPage() {
 ### Card Variants
 ```tsx
 // Standard card
-<div className="bg-white rounded-2xl border-2 border-nnrc-lavender shadow-lg p-6">
+<div className="bg-white rounded-xl border-2 border-nnrc-lavender shadow-lg p-6">
 
 // Widget card with gradient
 <div className="bg-gradient-to-br from-nnrc-lavender-light to-white rounded-xl border border-nnrc-lavender p-5">

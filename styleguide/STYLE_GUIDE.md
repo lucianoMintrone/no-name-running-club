@@ -376,7 +376,7 @@ font-weight: 700-900;
 ```tsx
 <div className="
   bg-white 
-  rounded-2xl 
+  rounded-xl 
   shadow-card
   p-6
   hover:shadow-card-hover
@@ -398,7 +398,7 @@ font-weight: 700-900;
 ```tsx
 <div className="
   bg-white 
-  rounded-2xl 
+  rounded-xl 
   shadow-card
   p-6
   text-center
@@ -421,7 +421,7 @@ font-weight: 700-900;
   bg-gradient-to-br 
   from-white 
   to-slate-50
-  rounded-2xl 
+  rounded-xl 
   shadow-card
   p-5
   hover:shadow-card-hover
@@ -520,7 +520,7 @@ The stamp grid is the signature UI element of NNRC:
 ">
   <div className="
     bg-white 
-    rounded-2xl 
+    rounded-xl 
     shadow-2xl 
     max-w-md 
     w-full 

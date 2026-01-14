@@ -93,7 +93,7 @@ export function getButtonClasses(
  * Generate card classes with optional hover effect
  */
 export function getCardClasses(withHover: boolean = false): string {
-  const baseClasses = 'bg-white rounded-2xl border-2 border-nnrc-lavender shadow-lg p-6';
+  const baseClasses = 'bg-white rounded-xl border-2 border-nnrc-lavender shadow-lg p-6';
   const hoverClasses = withHover ? 'hover:shadow-xl transition-shadow duration-300' : '';
   
   return cn(baseClasses, hoverClasses);

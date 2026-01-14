@@ -70,7 +70,7 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl animate-fadeIn">
+          <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-2xl animate-fadeIn">
             <button
               onClick={() => setIsOpen(false)}
               className="cursor-pointer absolute right-4 top-4 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150"
@@ -147,12 +147,12 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
                   onChange={(e) => setZipCode(e.target.value)}
                   placeholder="Enter zip code"
                   maxLength={10}
-                  className="flex-1 rounded-xl bg-gray-50 px-4 py-2.5 text-sm text-gray-900 focus:bg-white focus:ring-2 focus:ring-nnrc-purple focus:outline-none transition-all duration-150"
+                  className="flex-1 rounded-lg bg-gray-50 px-4 py-2.5 text-sm text-gray-900 focus:bg-white focus:ring-2 focus:ring-nnrc-purple focus:outline-none transition-all duration-150"
                 />
                 <button
                   onClick={handleZipCodeSave}
                   disabled={isPending}
-                  className="cursor-pointer rounded-xl bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150"
+                  className="cursor-pointer rounded-lg bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-150"
                 >
                   {zipSaved ? "Saved!" : "Save"}
                 </button>

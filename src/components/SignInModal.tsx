@@ -10,7 +10,7 @@ export function SignInModal() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="cursor-pointer rounded-xl bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
+        className="cursor-pointer rounded-lg bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
       >
         Sign in
       </button>
@@ -21,7 +21,7 @@ export function SignInModal() {
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl animate-fadeIn">
+          <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-8 shadow-2xl animate-fadeIn">
             <button
               onClick={() => setIsOpen(false)}
               className="cursor-pointer absolute right-4 top-4 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150"
@@ -54,7 +54,7 @@ export function SignInModal() {
             <form action={signInWithGoogle} className="mt-8">
               <button
                 type="submit"
-                className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-3 rounded-xl shadow-sm bg-white ring-1 ring-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
+                className="w-full cursor-pointer flex items-center justify-center gap-3 px-4 py-3 rounded-lg shadow-sm bg-white ring-1 ring-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path

@@ -6,7 +6,7 @@ interface AllTimeRecordWidgetProps {
 
 export function AllTimeRecordWidget({ name, temperature, image }: AllTimeRecordWidgetProps) {
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-nnrc-purple via-nnrc-purple to-nnrc-purple-dark p-5 shadow-purple-lg text-white relative overflow-hidden">
+    <div className="rounded-xl bg-gradient-to-br from-nnrc-purple via-nnrc-purple to-nnrc-purple-dark p-5 shadow-purple-lg text-white relative overflow-hidden">
       {/* Subtle pattern overlay */}
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_20%,white_1px,transparent_1px)] bg-[length:20px_20px]" />
       

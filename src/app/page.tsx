@@ -149,7 +149,7 @@ export default async function Home() {
                     {activeChallenges.map((challenge) => (
                       <div
                         key={challenge.id}
-                        className="rounded-2xl bg-white p-6 shadow-card"
+                        className="rounded-xl bg-white p-6 shadow-card"
                       >
                         <h3 className="mb-4 text-lg font-semibold text-gray-900">
                           {challenge.title}
@@ -165,7 +165,7 @@ export default async function Home() {
                     ))}
                   </div>
                 ) : (
-                  <div className="rounded-2xl bg-white p-6 shadow-card">
+                  <div className="rounded-xl bg-white p-6 shadow-card">
                     <p className="text-sm text-gray-400">
                       No active challenges right now.
                     </p>
@@ -185,7 +185,7 @@ export default async function Home() {
                     image={allTimeRecord.image}
                   />
                 ) : (
-                  <div className="rounded-2xl bg-white p-6 shadow-card">
+                  <div className="rounded-xl bg-white p-6 shadow-card">
                     <p className="text-sm text-gray-400">
                       No records yet.
                     </p>
