@@ -22,6 +22,7 @@ export async function createChallenge(formData: FormData) {
     const current = formData.get("current") === "on";
     const enrollAll = formData.get("enrollAll") === "on";
     const stravaUrl = formData.get("stravaUrl") as string | null;
+    const stravaEmbedCode = formData.get("stravaEmbedCode") as string | null;
 
     if (!season || !year || !daysCount) {
       throw new Error("Missing required fields");
@@ -43,6 +44,7 @@ export async function createChallenge(formData: FormData) {
         daysCount,
         current,
         stravaUrl: stravaUrl || null,
+        stravaEmbedCode: stravaEmbedCode || null,
       },
     });
 =======
@@ -90,6 +92,7 @@ export async function updateChallenge(id: string, formData: FormData) {
     const daysCount = parseInt(formData.get("daysCount") as string, 10);
     const current = formData.get("current") === "on";
     const stravaUrl = formData.get("stravaUrl") as string | null;
+    const stravaEmbedCode = formData.get("stravaEmbedCode") as string | null;
 
     if (!season || !year || !daysCount) {
       throw new Error("Missing required fields");
@@ -111,6 +114,7 @@ export async function updateChallenge(id: string, formData: FormData) {
         daysCount,
         current,
         stravaUrl: stravaUrl || null,
+        stravaEmbedCode: stravaEmbedCode || null,
       },
     });
 =======

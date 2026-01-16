@@ -40,6 +40,7 @@ export default async function EditChallengePage({ params }: EditChallengePagePro
           daysCount: challenge.daysCount,
           current: challenge.current,
           stravaUrl: challenge.stravaUrl,
+          stravaEmbedCode: challenge.stravaEmbedCode,
         }}
       />
     </div>

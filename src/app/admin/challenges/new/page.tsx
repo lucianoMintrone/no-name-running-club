@@ -125,6 +125,22 @@ export default function NewChallengePage() {
           </p>
         </div>
 
+        <div>
+          <FieldLabel htmlFor="stravaEmbedCode" helpText={challengesHelp.formFields.stravaEmbedCode}>
+            Strava Activity Widget Embed Code
+          </FieldLabel>
+          <textarea
+            id="stravaEmbedCode"
+            name="stravaEmbedCode"
+            rows={4}
+            placeholder="<iframe allowtransparency='true' frameborder='0' height='454' scrolling='no' src='https://www.strava.com/clubs/...' width='300'></iframe>"
+            className="w-full rounded-lg border border-nnrc-lavender px-4 py-2 font-mono text-sm focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Optional: Paste the full iframe embed code from Strava to display recent club activities
+          </p>
+        </div>
+
         <div className="flex items-center gap-2">
           <input
             type="checkbox"

@@ -31,7 +31,9 @@
 - **Configurable Duration**: Each challenge has a configurable number of days (default: 30 days)
 - **User Enrollment**: Users are enrolled in challenges via the `UserChallenge` model, which allows per-user customization of the days count
 - **Current Challenge Tracking**: One or more challenges can be marked as "current" (active)
-- **Strava Integration**: Each challenge can optionally have a linked Strava club or challenge URL, displayed to users via a branded widget
+- **Strava Integration**: Each challenge can optionally have:
+  - A linked Strava club or challenge URL, displayed to users via a branded widget
+  - An embedded Strava activity widget showing recent club runs (via iframe embed code)
 
 ### 3. Run Logging
 - **Stamp Grid Interface**: Users see a visual grid of numbered circles representing each day of the challenge
@@ -74,6 +76,7 @@
    - Interactive stamp grid
 2. **Sidebar Widgets**:
    - Strava Challenge (link to join Strava club/challenge, if configured)
+   - Strava Activity Feed (embedded widget showing recent club runs, if configured)
    - Coldest Run (personal best for current challenge)
    - Challenge Leaderboard (top 5 coldest runs)
    - All-Time Club Record
@@ -111,8 +114,7 @@
 | `season` | Enum | "winter" or "summer" |
 | `year` | String | Year identifier (e.g., "2025/2026") |
 | `daysCount` | Int | Default number of days (typically 30) |
-| `stravaUrl` | String? | Optional URL to Strava club or challenge |
-
+| `stravaUrl` | String? | Optional URL to Strava club or challenge || `stravaEmbedCode` | String? | Optional iframe embed code for Strava activity widget |
 ### UserChallenge
 | Field | Type | Description |
 |-------|------|-------------|
@@ -208,6 +210,7 @@
 | `AllTimeRecordWidget` | Displays all-time club record |
 | `ShareWidget` | Social sharing button (native share on mobile, copy link on desktop) |
 | `StravaWidget` | Strava-branded widget with link to join the challenge's Strava club/challenge |
+| `StravaActivityWidget` | Embedded Strava activity feed showing recent club runs |
 
 ---
 

@@ -26,6 +26,8 @@ export const challengesHelp = {
       "How many runs are required to complete the challenge (default: 30). This determines the number of stamps on each participant's card.",
     stravaUrl:
       "Optional URL to a Strava club or challenge. When provided, a Strava widget will appear on the homepage allowing users to join the associated Strava challenge.",
+    stravaEmbedCode:
+      "Optional embed code for Strava's activity widget. Paste the full iframe code from Strava (e.g., from Club settings > Widget). This displays recent club activities on the homepage.",
     current:
       "When checked, this challenge becomes the active challenge. The previous active challenge will be automatically deactivated. Only one challenge can be active at a time.",
     enrollAll:

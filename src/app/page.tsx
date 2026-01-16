@@ -7,13 +7,8 @@ import { ColdestRunWidget } from "@/components/ColdestRunWidget";
 import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
 import { ShareWidget } from "@/components/ShareWidget";
-<<<<<<< HEAD
 import { StravaWidget } from "@/components/StravaWidget";
 import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
-=======
-import { StravaWidget } from "@/components/StravaWidget";
-import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
->>>>>>> 74b47f0 (feat: add Strava widget integration and comprehensive E2E test suite)
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
 import Link from "next/link";
@@ -30,6 +25,7 @@ export default async function Home() {
   let coldestRun: ColdestRunInfo | null = null;
   let leaderboard: LeaderboardEntry[] = [];
   let stravaUrl: string | null = null;
+  let stravaEmbedCode: string | null = null;
   
   // Always fetch active challenges and all-time record for public display
   const [activeChallenges, allTimeRecord] = await Promise.all([
@@ -51,6 +47,7 @@ export default async function Home() {
       daysCount = userChallenge.daysCount;
       completedPositions = userChallenge.runs.map((run) => run.position);
       stravaUrl = userChallenge.challenge.stravaUrl;
+      stravaEmbedCode = userChallenge.challenge.stravaEmbedCode;
     }
     if (user) {
       userZipCode = user.zipCode;
@@ -96,7 +93,7 @@ export default async function Home() {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-4xl px-6 py-8">
+      <main className="mx-auto max-w-5xl px-6 py-8">
         {session?.user && challengeTitle && daysCount ? (
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
             <div className="flex-1">
@@ -117,15 +114,15 @@ export default async function Home() {
                   runNumber={coldestRun.position}
                 />
               )}
-              {leaderboard.length > 0 && (
-                <LeaderboardWidget entries={leaderboard} />
-              )}
               {allTimeRecord && (
                 <AllTimeRecordWidget
                   name={allTimeRecord.name}
                   temperature={allTimeRecord.temperature}
                   image={allTimeRecord.image}
                 />
+              )}
+              {leaderboard.length > 0 && (
+                <LeaderboardWidget entries={leaderboard} />
               )}
             </div>
           </div>

@@ -16,12 +16,12 @@ export function LeaderboardWidget({ entries }: LeaderboardWidgetProps) {
   }
 
   return (
-    <div className="rounded-xl bg-white p-5 shadow-card hover:shadow-card-hover transition-all duration-200">
+    <div className="rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/50 p-5 shadow-card hover:shadow-card-hover transition-all duration-200">
       <div className="mb-4 flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-nnrc-purple/10">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/20">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 text-nnrc-purple"
+            className="h-4 w-4 text-amber-600"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

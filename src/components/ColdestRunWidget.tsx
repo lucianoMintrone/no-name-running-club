@@ -15,9 +15,9 @@ export function ColdestRunWidget({
   });
 
   return (
-    <div className="rounded-xl bg-white p-5 shadow-card hover:shadow-card-hover transition-all duration-200">
+    <div className="rounded-xl bg-gradient-to-br from-sky-50 to-cyan-50 border border-sky-200/50 p-5 shadow-card hover:shadow-card-hover transition-all duration-200">
       <div className="mb-3 flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-50">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/20">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4 text-sky-500"
