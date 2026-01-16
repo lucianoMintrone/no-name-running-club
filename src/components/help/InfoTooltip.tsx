@@ -96,20 +96,18 @@ export function InfoTooltip({
       </button>
 
       {isVisible && (
-        <div
+        <span
           ref={tooltipRef}
           role="tooltip"
           className={`absolute z-50 ${positionClasses[position]}`}
           style={{ maxWidth: `${maxWidth}px` }}
         >
-          <div className="rounded-lg bg-gray-900 px-3 py-2 text-sm text-white shadow-lg">
+          <span className="block rounded-lg bg-gray-900 px-3 py-2 text-sm text-white shadow-lg">
             {content}
-          </div>
+          </span>
           {/* Arrow */}
-          <div
-            className={`absolute h-0 w-0 border-4 ${arrowClasses[position]}`}
-          />
-        </div>
+          <span className={`absolute h-0 w-0 border-4 ${arrowClasses[position]}`} />
+        </span>
       )}
     </span>
   );

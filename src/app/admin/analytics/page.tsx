@@ -1,13 +1,13 @@
 import { AnalyticsService } from "@/services/AnalyticsService";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { analyticsHelp } from "@/components/admin/help-content";
 import {
   AnalyticsHelpPanel,
   AnalyticsStatCard,
   EngagementCard,
   ChallengeStatCard,
   ChartTitleWithHelp,
-  analyticsHelp,
 } from "./AnalyticsHelp";
 
 async function getAnalyticsData() {
