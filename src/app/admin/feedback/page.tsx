@@ -1,18 +1,13 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { retryFeedbackLinearIssue } from "@/app/actions/feedback";
+import { Badge, Button, Card } from "@/components/ui";
 
 type SearchParams = {
   status?: "created" | "failed" | "pending";
   category?: "bug" | "idea" | "question";
   q?: string;
 };
-
-function statusPill(status: string) {
-  if (status === "created") return "bg-green-50 text-green-800 ring-1 ring-green-200";
-  if (status === "failed") return "bg-red-50 text-red-800 ring-1 ring-red-200";
-  return "bg-gray-50 text-gray-700 ring-1 ring-gray-200";
-}
 
 export default async function AdminFeedbackPage({
   searchParams,
@@ -99,17 +94,14 @@ export default async function AdminFeedbackPage({
           </div>
 
           <div className="sm:col-span-3 flex items-center justify-end gap-2 pt-1">
-            <button
-              type="submit"
-              className="rounded-lg bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-4 py-2 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
-            >
+            <Button type="submit" size="sm">
               Apply
-            </button>
+            </Button>
           </div>
         </form>
       </div>
 
-      <div className="overflow-hidden rounded-xl bg-white shadow-card">
+      <Card className="overflow-hidden">
         <div className="border-b border-nnrc-lavender px-5 py-4">
           <div className="text-sm font-semibold text-gray-900">
             Latest submissions <span className="text-gray-500">({feedback.length})</span>
@@ -127,16 +119,10 @@ export default async function AdminFeedbackPage({
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${statusPill(
-                          f.linearStatus
-                        )}`}
-                      >
+                      <Badge tone={f.linearStatus === "created" ? "success" : f.linearStatus === "failed" ? "danger" : "neutral"}>
                         {f.linearStatus.toUpperCase()}
-                      </span>
-                      <span className="inline-flex items-center rounded-full bg-nnrc-lavender-light px-2 py-1 text-xs font-semibold text-nnrc-purple-dark ring-1 ring-nnrc-lavender">
-                        {f.category.toUpperCase()}
-                      </span>
+                      </Badge>
+                      <Badge tone="nnrc">{f.category.toUpperCase()}</Badge>
                       <span className="text-xs text-gray-500">
                         {f.createdAt.toLocaleString()}
                       </span>
@@ -177,12 +163,9 @@ export default async function AdminFeedbackPage({
                   <div className="flex shrink-0 flex-col items-end gap-2">
                     {f.linearStatus !== "created" ? (
                       <form action={retryFeedbackLinearIssue.bind(null, f.id)}>
-                        <button
-                          type="submit"
-                          className="rounded-lg bg-white px-3 py-2 text-xs font-semibold text-nnrc-purple-dark shadow-sm ring-1 ring-nnrc-lavender hover:bg-nnrc-lavender-light transition-colors"
-                        >
+                        <Button type="submit" variant="secondary" size="sm">
                           Retry Linear
-                        </button>
+                        </Button>
                       </form>
                     ) : null}
                   </div>
@@ -191,7 +174,7 @@ export default async function AdminFeedbackPage({
             ))}
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

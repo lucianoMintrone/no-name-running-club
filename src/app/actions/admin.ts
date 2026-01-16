@@ -7,6 +7,7 @@ import { AdminChallengeService } from "@/services/AdminChallengeService";
 import { AdminUserService } from "@/services/AdminUserService";
 import { AdminRunService } from "@/services/AdminRunService";
 import { AdminExportService } from "@/services/AdminExportService";
+import { getCheckbox, getRequiredInt, getRequiredString } from "@/lib/validation";
 
 // ============================================
 // Challenge Management
@@ -14,15 +15,11 @@ import { AdminExportService } from "@/services/AdminExportService";
 
 export async function createChallenge(formData: FormData) {
   return withAdminAuth(async () => {
-    const season = formData.get("season") as string;
-    const year = formData.get("year") as string;
-    const daysCount = parseInt(formData.get("daysCount") as string, 10);
-    const current = formData.get("current") === "on";
-    const enrollAll = formData.get("enrollAll") === "on";
-
-    if (!season || !year || !daysCount) {
-      throw new Error("Missing required fields");
-    }
+    const season = getRequiredString(formData, "season");
+    const year = getRequiredString(formData, "year");
+    const daysCount = getRequiredInt(formData, "daysCount");
+    const current = getCheckbox(formData, "current");
+    const enrollAll = getCheckbox(formData, "enrollAll");
     const challenge = await AdminChallengeService.createChallenge({
       season: season as Season,
       year,
@@ -38,14 +35,10 @@ export async function createChallenge(formData: FormData) {
 
 export async function updateChallenge(id: string, formData: FormData) {
   return withAdminAuth(async () => {
-    const season = formData.get("season") as string;
-    const year = formData.get("year") as string;
-    const daysCount = parseInt(formData.get("daysCount") as string, 10);
-    const current = formData.get("current") === "on";
-
-    if (!season || !year || !daysCount) {
-      throw new Error("Missing required fields");
-    }
+    const season = getRequiredString(formData, "season");
+    const year = getRequiredString(formData, "year");
+    const daysCount = getRequiredInt(formData, "daysCount");
+    const current = getCheckbox(formData, "current");
     const challenge = await AdminChallengeService.updateChallenge(id, {
       season: season as Season,
       year,
