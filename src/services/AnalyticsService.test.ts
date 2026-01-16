@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { prismaMock } from "@/test/mocks/prisma";
 
 // Mock the prisma module before importing AnalyticsService
@@ -16,15 +16,6 @@ describe("AnalyticsService", () => {
     year: "2025/2026",
     daysCount: 30,
     current: true,
-    createdAt: new Date("2025-12-01"),
-    updatedAt: new Date("2025-12-01"),
-  };
-
-  const mockUser = {
-    id: "user-123",
-    name: "Test User",
-    email: "test@example.com",
-    role: "member",
     createdAt: new Date("2025-12-01"),
     updatedAt: new Date("2025-12-01"),
   };
@@ -112,7 +103,7 @@ describe("AnalyticsService", () => {
         ],
       };
 
-      prismaMock.challenge.findUnique.mockResolvedValue(mockChallengeWithData as any);
+      prismaMock.challenge.findUnique.mockResolvedValue(mockChallengeWithData as unknown as never);
 
       const result = await AnalyticsService.getChallengeParticipation("challenge-123");
 
@@ -155,7 +146,7 @@ describe("AnalyticsService", () => {
         ],
       };
 
-      prismaMock.challenge.findUnique.mockResolvedValue(mockChallengeWithCompletedUser as any);
+      prismaMock.challenge.findUnique.mockResolvedValue(mockChallengeWithCompletedUser as unknown as never);
 
       const result = await AnalyticsService.getChallengeParticipation("challenge-123");
 
@@ -170,12 +161,12 @@ describe("AnalyticsService", () => {
       prismaMock.run.findMany.mockResolvedValueOnce([
         { userChallenge: { userId: "user-1" } },
         { userChallenge: { userId: "user-2" } },
-      ] as any); // 7 days
+      ] as unknown as never); // 7 days
       prismaMock.run.findMany.mockResolvedValueOnce([
         { userChallenge: { userId: "user-1" } },
         { userChallenge: { userId: "user-2" } },
         { userChallenge: { userId: "user-3" } },
-      ] as any); // 30 days
+      ] as unknown as never); // 30 days
 
       prismaMock.user.count.mockResolvedValueOnce(5); // new users 7 days
       prismaMock.user.count.mockResolvedValueOnce(15); // new users 30 days
@@ -203,7 +194,7 @@ describe("AnalyticsService", () => {
         { createdAt: today },
         { createdAt: today },
         { createdAt: yesterday },
-      ] as any);
+      ] as unknown as never);
 
       const result = await AnalyticsService.getRunsByDay(7);
 
@@ -243,7 +234,7 @@ describe("AnalyticsService", () => {
         { temperature: 25 },
         { temperature: 35 },
         { temperature: null }, // Should be filtered out
-      ] as any);
+      ] as unknown as never);
 
       const result = await AnalyticsService.getTemperatureDistribution();
 
@@ -276,7 +267,7 @@ describe("AnalyticsService", () => {
             { temperature: 5 },
           ],
         },
-      ] as any);
+      ] as unknown as never);
 
       const result = await AnalyticsService.exportLeaderboard("challenge-123");
 
@@ -295,7 +286,7 @@ describe("AnalyticsService", () => {
           user: { name: null, email: "anonymous@example.com" },
           runs: [{ temperature: 20 }],
         },
-      ] as any);
+      ] as unknown as never);
 
       const result = await AnalyticsService.exportLeaderboard("challenge-123");
 
@@ -317,7 +308,7 @@ describe("AnalyticsService", () => {
             { _count: { runs: 10 } },
           ],
         },
-      ] as any);
+      ] as unknown as never);
 
       const result = await AnalyticsService.exportUsers();
 
@@ -354,7 +345,7 @@ describe("AnalyticsService", () => {
             ],
           },
         ],
-      } as any);
+      } as unknown as never);
 
       const result = await AnalyticsService.exportChallengeData("challenge-123");
 

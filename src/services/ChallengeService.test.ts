@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { prismaMock } from "@/test/mocks/prisma";
 
 // Mock the prisma module before importing ChallengeService
@@ -97,7 +97,7 @@ describe("ChallengeService", () => {
         challenge: mockChallenge,
         runs: [mockRun],
       };
-      prismaMock.userChallenge.findFirst.mockResolvedValue(userChallengeWithRuns as any);
+      prismaMock.userChallenge.findFirst.mockResolvedValue(userChallengeWithRuns as unknown as never);
 
       const result = await ChallengeService.getColdestRun("user-123");
 
@@ -113,7 +113,7 @@ describe("ChallengeService", () => {
         ...mockUserChallenge,
         challenge: mockChallenge,
         runs: [],
-      } as any);
+      } as unknown as never);
 
       const result = await ChallengeService.getColdestRun("user-123");
 
@@ -181,7 +181,7 @@ describe("ChallengeService", () => {
             user: { name: "Bob Jones", image: "bob.jpg" },
           },
         },
-      ] as any);
+      ] as unknown as never);
 
       const result = await ChallengeService.getChallengeLeaderboard();
 
@@ -211,7 +211,7 @@ describe("ChallengeService", () => {
           user: { name: "Record Holder", image: "record.jpg" },
           challenge: mockChallenge,
         },
-      } as any);
+      } as unknown as never);
 
       const result = await ChallengeService.getAllTimeRecord();
 

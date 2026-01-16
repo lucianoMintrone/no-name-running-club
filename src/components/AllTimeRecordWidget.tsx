@@ -1,3 +1,5 @@
+import { Avatar } from "@/components/Avatar";
+
 interface AllTimeRecordWidgetProps {
   name: string;
   temperature: number;
@@ -42,10 +44,12 @@ export function AllTimeRecordWidget({ name, temperature, image }: AllTimeRecordW
 
         <div className="mt-3 flex items-center gap-2 text-sm text-white/80">
           {image && (
-            <img
+            <Avatar
               src={image}
               alt=""
-              className="h-6 w-6 rounded-full ring-2 ring-white/30"
+              size={24}
+              className="h-6 w-6 ring-2 ring-white/30"
+              fallbackText={name}
             />
           )}
           <span className="font-medium">{name}</span>

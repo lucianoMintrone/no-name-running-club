@@ -13,29 +13,17 @@ export function HelpPanel({
   storageKey,
   children,
 }: HelpPanelProps) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // Load collapsed state from localStorage
-    const stored = localStorage.getItem(`help-panel-${storageKey}`);
-    if (stored !== null) {
-      setIsCollapsed(stored === "true");
-    }
-    setIsLoaded(true);
-  }, [storageKey]);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window === "undefined") return true;
+    const stored = window.localStorage.getItem(`help-panel-${storageKey}`);
+    if (stored !== null) return stored === "true";
+    return true;
+  });
 
   useEffect(() => {
     // Save collapsed state to localStorage
-    if (isLoaded) {
-      localStorage.setItem(`help-panel-${storageKey}`, String(isCollapsed));
-    }
-  }, [isCollapsed, storageKey, isLoaded]);
-
-  // Don't render until we've loaded the saved state to prevent flash
-  if (!isLoaded) {
-    return null;
-  }
+    window.localStorage.setItem(`help-panel-${storageKey}`, String(isCollapsed));
+  }, [isCollapsed, storageKey]);
 
   return (
     <div className="rounded-xl border border-nnrc-lavender bg-nnrc-lavender-light/50 overflow-hidden">

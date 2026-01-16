@@ -1,8 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { ChallengeService } from "@/services/ChallengeService";
+import { RunService } from "@/services/RunService";
 
 export interface SaveRunInput {
   temperature: number;
@@ -15,41 +14,5 @@ export async function saveRun(input: SaveRunInput) {
     throw new Error("Not authenticated");
   }
 
-  const userChallenge = await ChallengeService.getUserCurrentChallenge(
-    session.user.id
-  );
-  if (!userChallenge) {
-    throw new Error("No active challenge found");
-  }
-
-  // Check if a run already exists for this position
-  const existingRun = await prisma.run.findFirst({
-    where: {
-      userChallengeId: userChallenge.id,
-      position: input.position,
-    },
-  });
-
-  const today = new Date();
-
-  if (existingRun) {
-    // Update existing run
-    return prisma.run.update({
-      where: { id: existingRun.id },
-      data: {
-        temperature: input.temperature,
-        date: today,
-      },
-    });
-  }
-
-  // Create new run
-  return prisma.run.create({
-    data: {
-      userChallengeId: userChallenge.id,
-      date: today,
-      temperature: input.temperature,
-      position: input.position,
-    },
-  });
+  return RunService.saveRunForUser(session.user.id, input);
 }

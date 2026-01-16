@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createChallenge } from "@/app/actions/admin";
 import { FieldLabel, InfoTooltip } from "@/components/help";
 import { challengesHelp } from "@/components/admin/help-content";
@@ -27,12 +28,12 @@ export default function NewChallengePage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div className="flex items-center gap-4">
-        <a
+        <Link
           href="/admin/challenges"
           className="text-nnrc-purple hover:text-nnrc-purple-dark"
         >
           ← Back
-        </a>
+        </Link>
         <h1 className="text-2xl font-bold text-nnrc-purple-dark">
           Create New Challenge
         </h1>
@@ -76,7 +77,7 @@ export default function NewChallengePage() {
             className="w-full rounded-lg border border-nnrc-lavender px-4 py-2 focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
           />
           <p className="mt-1 text-xs text-gray-500">
-            For winter challenges spanning two years, use format like "2025/2026"
+            For winter challenges spanning two years, use format like &quot;2025/2026&quot;
           </p>
         </div>
 
@@ -136,12 +137,12 @@ export default function NewChallengePage() {
           >
             {isSubmitting ? "Creating..." : "Create Challenge"}
           </button>
-          <a
+          <Link
             href="/admin/challenges"
             className="rounded-lg border border-nnrc-lavender px-6 py-2 text-nnrc-purple-dark hover:bg-nnrc-lavender-light"
           >
             Cancel
-          </a>
+          </Link>
         </div>
       </form>
     </div>

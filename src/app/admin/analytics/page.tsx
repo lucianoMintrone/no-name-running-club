@@ -190,7 +190,7 @@ export default async function AnalyticsPage() {
         </ChartTitleWithHelp>
         <div className="h-48">
           <div className="flex h-full items-end gap-1">
-            {data.runsByDay.map((day, index) => (
+            {data.runsByDay.map((day) => (
               <div
                 key={day.date}
                 className="group relative flex-1 min-w-0"

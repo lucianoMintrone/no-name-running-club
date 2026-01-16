@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface StampGridProps {
   totalStamps?: number;
   completedPositions?: number[];
@@ -28,9 +30,11 @@ export function StampGrid({
             }`}
           >
             {isCompleted ? (
-              <img
+              <Image
                 src="/logos/nnrc-stamp.svg"
                 alt="Completed"
+                width={40}
+                height={40}
                 className="h-10 w-10"
               />
             ) : (

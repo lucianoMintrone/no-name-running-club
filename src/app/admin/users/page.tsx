@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { Avatar } from "@/components/Avatar";
 import { UsersHelpPanel, UserTableHeader } from "./UsersHelp";
 
 export default async function AdminUsersPage() {
@@ -55,17 +56,13 @@ export default async function AdminUsersPage() {
                 <tr key={user.id} className="hover:bg-nnrc-lavender-light/50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      {user.image ? (
-                        <img
-                          src={user.image}
-                          alt=""
-                          className="h-10 w-10 rounded-full"
-                        />
-                      ) : (
-                        <div className="h-10 w-10 rounded-full bg-nnrc-purple-light flex items-center justify-center text-white font-medium">
-                          {(user.name || user.email)?.[0]?.toUpperCase()}
-                        </div>
-                      )}
+                      <Avatar
+                        src={user.image}
+                        alt=""
+                        size={40}
+                        className="h-10 w-10"
+                        fallbackText={user.name || user.email || "?"}
+                      />
                       <div>
                         <div className="text-sm font-medium text-nnrc-purple-dark">
                           {user.name || "No name"}

@@ -14,14 +14,9 @@ export function InfoTooltip({
   maxWidth = 250,
 }: InfoTooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile] = useState(() => typeof window !== "undefined" && "ontouchstart" in window);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // Detect mobile/touch devices
-    setIsMobile("ontouchstart" in window);
-  }, []);
 
   useEffect(() => {
     // Close tooltip when clicking outside (for mobile)

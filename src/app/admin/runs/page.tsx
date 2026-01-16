@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { RunActions } from "./RunActions";
 import { RunsHelpPanel, RunTableHeader } from "./RunsHelp";
+import { Avatar } from "@/components/Avatar";
 
 export default async function AdminRunsPage() {
   const runs = await prisma.run.findMany({
@@ -14,10 +15,6 @@ export default async function AdminRunsPage() {
         },
       },
     },
-  });
-
-  const challenges = await prisma.challenge.findMany({
-    orderBy: { createdAt: "desc" },
   });
 
   return (
@@ -61,20 +58,13 @@ export default async function AdminRunsPage() {
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      {run.userChallenge.user.image ? (
-                        <img
-                          src={run.userChallenge.user.image}
-                          alt=""
-                          className="h-8 w-8 rounded-full"
-                        />
-                      ) : (
-                        <div className="h-8 w-8 rounded-full bg-nnrc-purple-light flex items-center justify-center text-white text-xs font-medium">
-                          {(
-                            run.userChallenge.user.name ||
-                            run.userChallenge.user.email
-                          )?.[0]?.toUpperCase()}
-                        </div>
-                      )}
+                      <Avatar
+                        src={run.userChallenge.user.image}
+                        alt=""
+                        size={32}
+                        className="h-8 w-8 text-xs"
+                        fallbackText={run.userChallenge.user.name || run.userChallenge.user.email || "?"}
+                      />
                       <div>
                         <div className="text-sm font-medium text-nnrc-purple-dark">
                           {run.userChallenge.user.name || "No name"}

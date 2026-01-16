@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   triggerNativeShare,
   copyToClipboard,
@@ -11,14 +11,8 @@ import {
 
 export function ShareWidget() {
   const [copied, setCopied] = useState(false);
-  const [hasNativeShare, setHasNativeShare] = useState(false);
-  const [shareUrl, setShareUrl] = useState(DEFAULT_SHARE_DATA.url);
-
-  // Check for native share support and get URL on client side
-  useEffect(() => {
-    setHasNativeShare(supportsNativeShare());
-    setShareUrl(getShareUrl());
-  }, []);
+  const [hasNativeShare] = useState(() => supportsNativeShare());
+  const [shareUrl] = useState(() => getShareUrl() || DEFAULT_SHARE_DATA.url);
 
   const handleShare = async () => {
     const shareData = {

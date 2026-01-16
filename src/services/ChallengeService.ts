@@ -38,6 +38,40 @@ export interface ActiveChallengeWithLeaderboard {
 }
 
 export class ChallengeService {
+  private static firstNameFromFullName(fullName: string | null): string {
+    const safe = (fullName || "Anonymous").trim();
+    const first = safe.split(/\s+/)[0];
+    return first || "Anonymous";
+  }
+
+  private static leaderboardFromUserMap(
+    byUser: Map<string, LeaderboardEntry>
+  ): LeaderboardEntry[] {
+    return Array.from(byUser.values()).sort((a, b) => a.temperature - b.temperature);
+  }
+
+  private static addColdestRunIfMissing(
+    byUser: Map<string, LeaderboardEntry>,
+    run: {
+      temperature: number;
+      date: Date;
+      userChallenge: {
+        userId: string;
+        user: { name: string | null; image: string | null };
+      };
+    }
+  ) {
+    const userId = run.userChallenge.userId;
+    if (byUser.has(userId)) return;
+
+    byUser.set(userId, {
+      firstName: this.firstNameFromFullName(run.userChallenge.user.name),
+      temperature: run.temperature,
+      date: run.date,
+      image: run.userChallenge.user.image,
+    });
+  }
+
   /**
    * Gets the current active challenge.
    */
@@ -115,7 +149,7 @@ export class ChallengeService {
       return [];
     }
 
-    // Get all runs with temperature for the current challenge, ordered by temperature
+    // Get all runs with temperature for the current challenge, ordered by temperature (coldest first)
     const runs = await prisma.run.findMany({
       where: {
         userChallenge: {
@@ -123,12 +157,13 @@ export class ChallengeService {
         },
         temperature: { not: null },
       },
-      orderBy: {
-        temperature: "asc",
-      },
-      include: {
+      orderBy: [{ temperature: "asc" }, { date: "asc" }],
+      select: {
+        temperature: true,
+        date: true,
         userChallenge: {
-          include: {
+          select: {
+            userId: true,
             user: {
               select: {
                 name: true,
@@ -140,26 +175,17 @@ export class ChallengeService {
       },
     });
 
-    // Get unique users with their coldest run
     const userColdestRuns = new Map<string, LeaderboardEntry>();
     for (const run of runs) {
-      const userId = run.userChallenge.userId;
-      if (!userColdestRuns.has(userId)) {
-        const fullName = run.userChallenge.user.name || "Anonymous";
-        const firstName = fullName.split(" ")[0];
-        userColdestRuns.set(userId, {
-          firstName,
-          temperature: run.temperature!,
-          date: run.date,
-          image: run.userChallenge.user.image,
-        });
-      }
+      // `temperature` is non-null via query filter
+      this.addColdestRunIfMissing(userColdestRuns, {
+        temperature: run.temperature as number,
+        date: run.date,
+        userChallenge: run.userChallenge,
+      });
     }
 
-    // Convert to array and sort by temperature
-    return Array.from(userColdestRuns.values()).sort(
-      (a, b) => a.temperature - b.temperature
-    );
+    return this.leaderboardFromUserMap(userColdestRuns);
   }
 
   /**
@@ -180,61 +206,75 @@ export class ChallengeService {
       where: { current: true },
     });
 
-    const result: ActiveChallengeWithLeaderboard[] = [];
+    if (activeChallenges.length === 0) {
+      return [];
+    }
 
-    for (const challenge of activeChallenges) {
-      const runs = await prisma.run.findMany({
-        where: {
-          userChallenge: {
-            challengeId: challenge.id,
-          },
-          temperature: { not: null },
+    const challengeIds = activeChallenges.map((c) => c.id);
+
+    // Fetch all relevant runs for all active challenges in one query (avoid N+1).
+    // We order by temperature ASC so the first run we see per user is the coldest.
+    const runs = await prisma.run.findMany({
+      where: {
+        temperature: { not: null },
+        userChallenge: {
+          challengeId: { in: challengeIds },
         },
-        orderBy: {
-          temperature: "asc",
-        },
-        include: {
-          userChallenge: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                  image: true,
-                },
+      },
+      orderBy: [{ temperature: "asc" }, { date: "asc" }],
+      select: {
+        temperature: true,
+        date: true,
+        userChallenge: {
+          select: {
+            userId: true,
+            challengeId: true,
+            user: {
+              select: {
+                name: true,
+                image: true,
               },
             },
           },
         },
-      });
+      },
+    });
 
-      // Get unique users with their coldest run
-      const userColdestRuns = new Map<string, LeaderboardEntry>();
-      for (const run of runs) {
-        const userId = run.userChallenge.userId;
-        if (!userColdestRuns.has(userId)) {
-          const fullName = run.userChallenge.user.name || "Anonymous";
-          const firstName = fullName.split(" ")[0];
-          userColdestRuns.set(userId, {
-            firstName,
-            temperature: run.temperature!,
-            date: run.date,
-            image: run.userChallenge.user.image,
-          });
-        }
+    // challengeId -> (userId -> coldest entry)
+    const coldestByChallenge = new Map<string, Map<string, LeaderboardEntry>>();
+    for (const run of runs) {
+      const challengeId = run.userChallenge.challengeId;
+
+      const byUser =
+        coldestByChallenge.get(challengeId) ??
+        new Map<string, LeaderboardEntry>();
+
+      if (!coldestByChallenge.has(challengeId)) {
+        coldestByChallenge.set(challengeId, byUser);
       }
 
-      const leaderboard = Array.from(userColdestRuns.values()).sort(
-        (a, b) => a.temperature - b.temperature
-      );
-
-      result.push({
-        id: challenge.id,
-        title: this.formatChallengeTitle(challenge),
-        leaderboard,
+      // `temperature` is non-null via query filter and global ordering makes first-seen per user coldest
+      this.addColdestRunIfMissing(byUser, {
+        temperature: run.temperature as number,
+        date: run.date,
+        userChallenge: {
+          userId: run.userChallenge.userId,
+          user: run.userChallenge.user,
+        },
       });
     }
 
-    return result;
+    return activeChallenges.map((challenge) => {
+      const leaderboard = this.leaderboardFromUserMap(
+        coldestByChallenge.get(challenge.id) ?? new Map()
+      );
+
+      return {
+        id: challenge.id,
+        title: this.formatChallengeTitle(challenge),
+        leaderboard,
+      };
+    });
   }
 
   /**

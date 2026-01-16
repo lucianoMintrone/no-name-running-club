@@ -381,7 +381,7 @@ export function sortByTemperature<T extends { temperature: number }>(
    EXPORT ALL
    ======================================== */
 
-export default {
+const designUtils = {
   // Temperature
   getTemperatureColor,
   getTemperatureTextColor,
@@ -429,3 +429,5 @@ export default {
   chunkArray,
   sortByTemperature,
 };
+
+export default designUtils;

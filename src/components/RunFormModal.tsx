@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useRef, useState, useTransition, useEffect } from "react";
 import { saveRun } from "@/app/actions/run";
 import { getCurrentTemperature } from "@/app/actions/weather";
 
@@ -21,13 +21,21 @@ export function RunFormModal({
   const [isPending, startTransition] = useTransition();
   const [isLoadingWeather, setIsLoadingWeather] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasFetchedWeather, setHasFetchedWeather] = useState(false);
+  const hasFetchedWeatherRef = useRef(false);
+
+  const handleClose = () => {
+    setTemperature("");
+    setError(null);
+    setIsLoadingWeather(false);
+    hasFetchedWeatherRef.current = false;
+    onClose();
+  };
 
   // Fetch current temperature when modal opens
   useEffect(() => {
-    if (isOpen && !hasFetchedWeather) {
-      setIsLoadingWeather(true);
-      setHasFetchedWeather(true);
+    if (isOpen && !hasFetchedWeatherRef.current) {
+      hasFetchedWeatherRef.current = true;
+      Promise.resolve().then(() => setIsLoadingWeather(true));
       getCurrentTemperature()
         .then((temp) => {
           if (temp !== null) {
@@ -41,14 +49,7 @@ export function RunFormModal({
           setIsLoadingWeather(false);
         });
     }
-    
-    // Reset state when modal closes
-    if (!isOpen) {
-      setTemperature("");
-      setHasFetchedWeather(false);
-      setError(null);
-    }
-  }, [isOpen, hasFetchedWeather]);
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +68,7 @@ export function RunFormModal({
           position,
         });
         onRunCreated();
-        onClose();
+        handleClose();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to save run");
       }
@@ -78,10 +79,10 @@ export function RunFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={handleClose} />
       <div className="relative z-10 w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl animate-fadeIn">
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="cursor-pointer absolute right-4 top-4 p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150"
         >
           <svg

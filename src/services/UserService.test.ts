@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { prismaMock } from "@/test/mocks/prisma";
 
 // Mock the prisma module before importing UserService

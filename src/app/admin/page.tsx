@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { DashboardHelpPanel } from "./DashboardHelpPanel";
 import { StatCardWithHelp } from "./StatCardWithHelp";
 import { dashboardHelp } from "@/components/admin/help-content";
+import { Avatar } from "@/components/Avatar";
 
 async function getAdminStats() {
   const [
@@ -154,15 +155,13 @@ export default async function AdminDashboard() {
                 className="flex items-center justify-between rounded-lg bg-nnrc-lavender-light p-3"
               >
                 <div className="flex items-center gap-3">
-                  {run.userChallenge.user.image ? (
-                    <img
-                      src={run.userChallenge.user.image}
-                      alt=""
-                      className="h-8 w-8 rounded-full"
-                    />
-                  ) : (
-                    <div className="h-8 w-8 rounded-full bg-nnrc-purple-light" />
-                  )}
+                  <Avatar
+                    src={run.userChallenge.user.image}
+                    alt=""
+                    size={32}
+                    className="h-8 w-8"
+                    fallbackText={run.userChallenge.user.name || run.userChallenge.user.email || "?"}
+                  />
                   <div>
                     <p className="text-sm font-medium text-nnrc-purple-dark">
                       {run.userChallenge.user.name || run.userChallenge.user.email}

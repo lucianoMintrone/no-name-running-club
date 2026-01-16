@@ -11,6 +11,7 @@ import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry } from "@/
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
 import Link from "next/link";
+import { Avatar } from "@/components/Avatar";
 
 export default async function Home() {
   const session = await auth();
@@ -18,7 +19,6 @@ export default async function Home() {
   // Get the user's current challenge and settings if signed in
   let challengeTitle: string | null = null;
   let daysCount: number | null = null;
-  let userUnits: string = "imperial";
   let userZipCode: string | null = null;
   let completedPositions: number[] = [];
   let coldestRun: ColdestRunInfo | null = null;
@@ -45,7 +45,6 @@ export default async function Home() {
       completedPositions = userChallenge.runs.map((run) => run.position);
     }
     if (user) {
-      userUnits = user.units;
       userZipCode = user.zipCode;
     }
     coldestRun = coldest;
@@ -74,10 +73,11 @@ export default async function Home() {
               )}
               <SettingsModal currentZipCode={userZipCode} />
               {session.user.image && (
-                <img
+                <Avatar
                   src={session.user.image}
                   alt=""
-                  className="h-8 w-8 rounded-full ring-2 ring-gray-100"
+                  size={32}
+                  className="ring-2 ring-gray-100"
                 />
               )}
               <form action={signOutUser}>
@@ -102,7 +102,6 @@ export default async function Home() {
               <ChallengeCard
                 title={challengeTitle}
                 daysCount={daysCount}
-                units={userUnits}
                 completedPositions={completedPositions}
               />
             </div>

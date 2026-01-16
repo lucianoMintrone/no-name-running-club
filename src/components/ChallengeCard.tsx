@@ -8,14 +8,12 @@ import { RunFormModal } from "./RunFormModal";
 interface ChallengeCardProps {
   title: string;
   daysCount: number;
-  units: string;
   completedPositions: number[];
 }
 
 export function ChallengeCard({
   title,
   daysCount,
-  units,
   completedPositions,
 }: ChallengeCardProps) {
   const [totalStamps, setTotalStamps] = useState(daysCount);

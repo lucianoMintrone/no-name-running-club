@@ -1,3 +1,5 @@
+import { Avatar } from "@/components/Avatar";
+
 interface LeaderboardEntry {
   firstName: string;
   temperature: number;
@@ -58,10 +60,12 @@ export function LeaderboardWidget({ entries }: LeaderboardWidgetProps) {
                 {index + 1}
               </span>
               {entry.image && (
-                <img
+                <Avatar
                   src={entry.image}
                   alt=""
-                  className="h-6 w-6 rounded-full ring-2 ring-white shadow-sm"
+                  size={24}
+                  className="h-6 w-6 ring-2 ring-white shadow-sm"
+                  fallbackText={entry.firstName || "?"}
                 />
               )}
               <span className={`text-sm ${index === 0 ? "font-semibold text-gray-900" : "text-gray-600"}`}>

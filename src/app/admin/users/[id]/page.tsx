@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { Avatar } from "@/components/Avatar";
 import { UserActions } from "./UserActions";
 
 export default async function AdminUserDetailPage({
@@ -39,29 +41,25 @@ export default async function AdminUserDetailPage({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <a
+        <Link
           href="/admin/users"
           className="text-nnrc-purple hover:text-nnrc-purple-dark"
         >
           ← Back
-        </a>
+        </Link>
         <h1 className="text-2xl font-bold text-nnrc-purple-dark">User Details</h1>
       </div>
 
       {/* User Info Card */}
       <div className="rounded-xl bg-white border border-nnrc-lavender p-6 shadow-md">
         <div className="flex items-start gap-6">
-          {user.image ? (
-            <img
-              src={user.image}
-              alt=""
-              className="h-20 w-20 rounded-full"
-            />
-          ) : (
-            <div className="h-20 w-20 rounded-full bg-nnrc-purple-light flex items-center justify-center text-white text-2xl font-medium">
-              {(user.name || user.email)?.[0]?.toUpperCase()}
-            </div>
-          )}
+          <Avatar
+            src={user.image}
+            alt=""
+            size={80}
+            className="h-20 w-20 text-2xl"
+            fallbackText={user.name || user.email || "?"}
+          />
           <div className="flex-1">
             <h2 className="text-xl font-semibold text-nnrc-purple-dark">
               {user.name || "No name set"}
