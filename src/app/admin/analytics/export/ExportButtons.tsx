@@ -7,6 +7,7 @@ import {
   exportLeaderboard,
   exportAllChallengeStats,
 } from "@/app/actions/admin";
+import posthog from "posthog-js";
 
 interface ExportButtonsProps {
   type: "users" | "challenge" | "leaderboard" | "allChallenges";
@@ -57,9 +58,18 @@ export default function ExportButtons({ type, challengeId }: ExportButtonsProps)
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
+      // Track admin data export event
+      posthog.capture("admin_data_exported", {
+        export_type: type,
+        format,
+        challenge_id: challengeId,
+      });
     } catch (error) {
       console.error("Export failed:", error);
       alert("Export failed. Please try again.");
+      // Track error for error tracking
+      posthog.captureException(error instanceof Error ? error : new Error("Export failed"));
     } finally {
       setLoading(null);
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   triggerNativeShare,
   copyToClipboard,
@@ -11,8 +11,15 @@ import {
 
 export function ShareWidget() {
   const [copied, setCopied] = useState(false);
-  const [hasNativeShare] = useState(() => supportsNativeShare());
-  const [shareUrl] = useState(() => getShareUrl() || DEFAULT_SHARE_DATA.url);
+  // IMPORTANT: keep initial render deterministic to avoid hydration mismatch.
+  // We only detect browser capabilities after mount.
+  const [hasNativeShare, setHasNativeShare] = useState(false);
+  const [shareUrl, setShareUrl] = useState(DEFAULT_SHARE_DATA.url);
+
+  useEffect(() => {
+    setHasNativeShare(supportsNativeShare());
+    setShareUrl(getShareUrl() || DEFAULT_SHARE_DATA.url);
+  }, []);
 
   const handleShare = async () => {
     const shareData = {

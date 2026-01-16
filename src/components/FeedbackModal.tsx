@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { usePathname } from "next/navigation";
 import { submitFeedback } from "@/app/actions/feedback";
+import posthog from "posthog-js";
 
 type FeedbackModalProps = {
   isOpen: boolean;
@@ -31,6 +32,14 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
           userAgent: typeof navigator !== "undefined" ? navigator.userAgent : undefined,
         });
 
+        // Track feedback submission
+        posthog.capture("feedback_submitted", {
+          category,
+          message_length: message.length,
+          page_path: pathname,
+          linear_status: res.linearStatus,
+        });
+
         if (res.linearStatus === "created") {
           setStatus({ type: "ok", text: "Sent! Thanks — we created a Linear ticket." });
         } else {
@@ -44,6 +53,8 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Failed to send feedback";
         setStatus({ type: "err", text: msg });
+        // Track error for error tracking
+        posthog.captureException(e instanceof Error ? e : new Error(msg));
       }
     });
   };

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { updateUserZipCode } from "@/app/actions/user";
 import { FeedbackModal } from "@/components/FeedbackModal";
+import posthog from "posthog-js";
 
 interface SettingsModalProps {
   currentZipCode?: string | null;
@@ -17,9 +18,18 @@ export function SettingsModal({ currentZipCode }: SettingsModalProps) {
   const [zipSaved, setZipSaved] = useState(false);
   const router = useRouter();
 
+  const handleOpenSettings = () => {
+    setIsOpen(true);
+    posthog.capture("settings_opened");
+  };
+
   const handleZipCodeSave = () => {
     startTransition(async () => {
       await updateUserZipCode(zipCode);
+      // Track zip code saved event
+      posthog.capture("zip_code_saved", {
+        has_zip_code: !!zipCode,
+      });
       setZipSaved(true);
       setTimeout(() => setZipSaved(false), 2000);
       router.refresh();
@@ -33,7 +43,7 @@ export function SettingsModal({ currentZipCode }: SettingsModalProps) {
       ) : null}
 
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpenSettings}
         className="cursor-pointer rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors duration-150"
         aria-label="Settings"
       >

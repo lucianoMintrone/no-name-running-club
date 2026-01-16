@@ -1,0 +1,52 @@
+[
+  {
+    "event": "user_signed_in",
+    "description": "User signed in via Google OAuth",
+    "file": "src/lib/auth.ts"
+  },
+  {
+    "event": "run_logged",
+    "description": "User logged a run with temperature data",
+    "file": "src/components/RunFormModal.tsx"
+  },
+  {
+    "event": "run_form_opened",
+    "description": "User opened the run logging modal by clicking on a stamp",
+    "file": "src/components/ChallengeCard.tsx"
+  },
+  {
+    "event": "feedback_submitted",
+    "description": "User submitted feedback (bug, idea, or question)",
+    "file": "src/components/FeedbackModal.tsx"
+  },
+  {
+    "event": "settings_opened",
+    "description": "User opened the settings modal",
+    "file": "src/components/SettingsModal.tsx"
+  },
+  {
+    "event": "zip_code_saved",
+    "description": "User saved their home location (zip code) for weather auto-fill",
+    "file": "src/components/SettingsModal.tsx"
+  },
+  {
+    "event": "sign_in_modal_opened",
+    "description": "User opened the sign in modal",
+    "file": "src/components/SignInModal.tsx"
+  },
+  {
+    "event": "admin_challenge_created",
+    "description": "Admin created a new challenge",
+    "file": "src/app/admin/challenges/new/page.tsx"
+  },
+  {
+    "event": "admin_data_exported",
+    "description": "Admin exported data (users, challenges, leaderboards)",
+    "file": "src/app/admin/analytics/export/ExportButtons.tsx"
+  },
+  {
+    "event": "user_signed_out",
+    "description": "User signed out of the application",
+    "file": "src/app/page.tsx"
+  }
+]

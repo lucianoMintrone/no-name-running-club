@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition, useEffect } from "react";
 import { saveRun } from "@/app/actions/run";
 import { getCurrentTemperature } from "@/app/actions/weather";
+import posthog from "posthog-js";
 
 interface RunFormModalProps {
   isOpen: boolean;
@@ -67,10 +68,18 @@ export function RunFormModal({
           temperature: temp,
           position,
         });
+        // Track run logged event
+        posthog.capture("run_logged", {
+          position,
+          temperature: temp,
+        });
         onRunCreated();
         handleClose();
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to save run");
+        const errorMessage = err instanceof Error ? err.message : "Failed to save run";
+        setError(errorMessage);
+        // Track error for error tracking
+        posthog.captureException(err instanceof Error ? err : new Error(errorMessage));
       }
     });
   };

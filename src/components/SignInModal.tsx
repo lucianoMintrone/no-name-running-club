@@ -2,14 +2,20 @@
 
 import { useState } from "react";
 import { signInWithGoogle } from "@/app/actions/auth";
+import posthog from "posthog-js";
 
 export function SignInModal() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleOpenModal = () => {
+    setIsOpen(true);
+    posthog.capture("sign_in_modal_opened");
+  };
+
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpenModal}
         className="cursor-pointer rounded-lg bg-gradient-to-r from-nnrc-purple to-nnrc-purple-light px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-150"
       >
         Sign in

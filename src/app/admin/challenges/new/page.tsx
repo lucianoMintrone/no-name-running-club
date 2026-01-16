@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createChallenge } from "@/app/actions/admin";
 import { FieldLabel, InfoTooltip } from "@/components/help";
 import { challengesHelp } from "@/components/admin/help-content";
+import posthog from "posthog-js";
 
 export default function NewChallengePage() {
   const router = useRouter();
@@ -18,10 +19,21 @@ export default function NewChallengePage() {
 
     try {
       await createChallenge(formData);
+      // Track admin challenge created event
+      posthog.capture("admin_challenge_created", {
+        season: formData.get("season"),
+        year: formData.get("year"),
+        days_count: formData.get("daysCount"),
+        is_current: formData.get("current") === "on",
+        enroll_all: formData.get("enrollAll") === "on",
+      });
       router.push("/admin/challenges");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create challenge");
+      const errorMessage = err instanceof Error ? err.message : "Failed to create challenge";
+      setError(errorMessage);
       setIsSubmitting(false);
+      // Track error for error tracking
+      posthog.captureException(err instanceof Error ? err : new Error(errorMessage));
     }
   }
 

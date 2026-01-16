@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
-import { signOutUser } from "@/app/actions/auth";
 import { SignInModal } from "@/components/SignInModal";
+import { SignOutButton } from "@/components/SignOutButton";
 import { SettingsModal } from "@/components/SettingsModal";
 import { ChallengeCard } from "@/components/ChallengeCard";
 import { ColdestRunWidget } from "@/components/ColdestRunWidget";
@@ -80,14 +80,7 @@ export default async function Home() {
                   className="ring-2 ring-gray-100"
                 />
               )}
-              <form action={signOutUser}>
-                <button
-                  type="submit"
-                  className="cursor-pointer rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-150"
-                >
-                  Sign out
-                </button>
-              </form>
+              <SignOutButton />
             </div>
           ) : (
             <SignInModal />

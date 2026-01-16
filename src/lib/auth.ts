@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { UserService } from "@/services/UserService";
 import { authConfig } from "@/lib/auth.config";
 import { shouldBeAdmin } from "@/lib/admin";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -12,13 +13,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ...authConfig.callbacks,
     async signIn({ user, account, profile }) {
       if (account?.provider === "google" && user.email) {
-        await UserService.findOrCreateUser({
+        const existingUser = await UserService.findOrCreateUser({
           email: user.email,
           name: user.name,
           image: user.image,
           emailVerified: profile?.email_verified ? new Date() : null,
         });
-        
+
         // Auto-assign admin role if email is in ADMIN_EMAILS
         if (shouldBeAdmin(user.email)) {
           await prisma.user.update({
@@ -26,6 +27,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             data: { role: "admin" },
           });
         }
+
+        // Track server-side sign in event
+        const posthog = getPostHogClient();
+        posthog.capture({
+          distinctId: existingUser.id,
+          event: "user_signed_in",
+          properties: {
+            provider: account.provider,
+            is_new_user: existingUser.createdAt.getTime() > Date.now() - 60000, // Created within last minute
+            email: user.email,
+          },
+        });
+
+        // Identify user in PostHog
+        posthog.identify({
+          distinctId: existingUser.id,
+          properties: {
+            email: user.email,
+            name: user.name,
+          },
+        });
       }
       return true;
     },

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { StampGrid } from "./StampGrid";
 import { RunFormModal } from "./RunFormModal";
+import posthog from "posthog-js";
 
 interface ChallengeCardProps {
   title: string;
@@ -30,6 +31,12 @@ export function ChallengeCard({
   const handleStampClick = (position: number) => {
     setSelectedPosition(position);
     setIsModalOpen(true);
+    posthog.capture("run_form_opened", {
+      position,
+      challenge_title: title,
+      completed_count: completedCount,
+      total_days: daysCount,
+    });
   };
 
   const handleRunCreated = () => {
