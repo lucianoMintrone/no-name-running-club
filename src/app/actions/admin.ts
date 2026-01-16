@@ -15,17 +15,66 @@ import { getCheckbox, getRequiredInt, getRequiredString } from "@/lib/validation
 
 export async function createChallenge(formData: FormData) {
   return withAdminAuth(async () => {
-    const season = getRequiredString(formData, "season");
-    const year = getRequiredString(formData, "year");
-    const daysCount = getRequiredInt(formData, "daysCount");
-    const current = getCheckbox(formData, "current");
-    const enrollAll = getCheckbox(formData, "enrollAll");
-    const challenge = await AdminChallengeService.createChallenge({
-      season: season as Season,
-      year,
-      daysCount,
-      current,
-      enrollAll,
+<<<<<<< HEAD
+    const season = formData.get("season") as string;
+    const year = formData.get("year") as string;
+    const daysCount = parseInt(formData.get("daysCount") as string, 10);
+    const current = formData.get("current") === "on";
+    const enrollAll = formData.get("enrollAll") === "on";
+    const stravaUrl = formData.get("stravaUrl") as string | null;
+
+    if (!season || !year || !daysCount) {
+      throw new Error("Missing required fields");
+    }
+
+    // If setting as current, unset other current challenges
+    if (current) {
+      await prisma.challenge.updateMany({
+        where: { current: true },
+        data: { current: false },
+      });
+    }
+
+    // Create the challenge
+    const challenge = await prisma.challenge.create({
+      data: {
+        season: season as Season,
+        year,
+        daysCount,
+        current,
+        stravaUrl: stravaUrl || null,
+      },
+    });
+=======
+    const season = formData.get("season") as string;
+    const year = formData.get("year") as string;
+    const daysCount = parseInt(formData.get("daysCount") as string, 10);
+    const current = formData.get("current") === "on";
+    const enrollAll = formData.get("enrollAll") === "on";
+    const stravaUrl = formData.get("stravaUrl") as string | null;
+
+    if (!season || !year || !daysCount) {
+      throw new Error("Missing required fields");
+    }
+
+    // If setting as current, unset other current challenges
+    if (current) {
+      await prisma.challenge.updateMany({
+        where: { current: true },
+        data: { current: false },
+      });
+    }
+
+    // Create the challenge
+    const challenge = await prisma.challenge.create({
+      data: {
+        season: season as Season,
+        year,
+        daysCount,
+        current,
+        stravaUrl: stravaUrl || null,
+      },
+>>>>>>> 74b47f0 (feat: add Strava widget integration and comprehensive E2E test suite)
     });
 
     revalidatePath("/admin/challenges");
@@ -35,15 +84,64 @@ export async function createChallenge(formData: FormData) {
 
 export async function updateChallenge(id: string, formData: FormData) {
   return withAdminAuth(async () => {
-    const season = getRequiredString(formData, "season");
-    const year = getRequiredString(formData, "year");
-    const daysCount = getRequiredInt(formData, "daysCount");
-    const current = getCheckbox(formData, "current");
-    const challenge = await AdminChallengeService.updateChallenge(id, {
-      season: season as Season,
-      year,
-      daysCount,
-      current,
+<<<<<<< HEAD
+    const season = formData.get("season") as string;
+    const year = formData.get("year") as string;
+    const daysCount = parseInt(formData.get("daysCount") as string, 10);
+    const current = formData.get("current") === "on";
+    const stravaUrl = formData.get("stravaUrl") as string | null;
+
+    if (!season || !year || !daysCount) {
+      throw new Error("Missing required fields");
+    }
+
+    // If setting as current, unset other current challenges
+    if (current) {
+      await prisma.challenge.updateMany({
+        where: { current: true, id: { not: id } },
+        data: { current: false },
+      });
+    }
+
+    const challenge = await prisma.challenge.update({
+      where: { id },
+      data: {
+        season: season as Season,
+        year,
+        daysCount,
+        current,
+        stravaUrl: stravaUrl || null,
+      },
+    });
+=======
+    const season = formData.get("season") as string;
+    const year = formData.get("year") as string;
+    const daysCount = parseInt(formData.get("daysCount") as string, 10);
+    const current = formData.get("current") === "on";
+    const stravaUrl = formData.get("stravaUrl") as string | null;
+
+    if (!season || !year || !daysCount) {
+      throw new Error("Missing required fields");
+    }
+
+    // If setting as current, unset other current challenges
+    if (current) {
+      await prisma.challenge.updateMany({
+        where: { current: true, id: { not: id } },
+        data: { current: false },
+      });
+    }
+
+    const challenge = await prisma.challenge.update({
+      where: { id },
+      data: {
+        season: season as Season,
+        year,
+        daysCount,
+        current,
+        stravaUrl: stravaUrl || null,
+      },
+>>>>>>> 74b47f0 (feat: add Strava widget integration and comprehensive E2E test suite)
     });
 
     revalidatePath("/admin/challenges");

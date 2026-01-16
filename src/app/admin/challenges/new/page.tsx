@@ -109,6 +109,22 @@ export default function NewChallengePage() {
           />
         </div>
 
+        <div>
+          <FieldLabel htmlFor="stravaUrl" helpText={challengesHelp.formFields.stravaUrl}>
+            Strava Challenge URL
+          </FieldLabel>
+          <input
+            type="url"
+            id="stravaUrl"
+            name="stravaUrl"
+            placeholder="e.g., https://www.strava.com/clubs/..."
+            className="w-full rounded-lg border border-nnrc-lavender px-4 py-2 focus:border-nnrc-purple focus:outline-none focus:ring-1 focus:ring-nnrc-purple"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Optional: Link to a Strava club or challenge for this event
+          </p>
+        </div>
+
         <div className="flex items-center gap-2">
           <input
             type="checkbox"

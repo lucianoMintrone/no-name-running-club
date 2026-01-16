@@ -7,7 +7,13 @@ import { ColdestRunWidget } from "@/components/ColdestRunWidget";
 import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
 import { ShareWidget } from "@/components/ShareWidget";
-import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry } from "@/services/ChallengeService";
+<<<<<<< HEAD
+import { StravaWidget } from "@/components/StravaWidget";
+import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
+=======
+import { StravaWidget } from "@/components/StravaWidget";
+import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
+>>>>>>> 74b47f0 (feat: add Strava widget integration and comprehensive E2E test suite)
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
 import Link from "next/link";
@@ -23,6 +29,7 @@ export default async function Home() {
   let completedPositions: number[] = [];
   let coldestRun: ColdestRunInfo | null = null;
   let leaderboard: LeaderboardEntry[] = [];
+  let stravaUrl: string | null = null;
   
   // Always fetch active challenges and all-time record for public display
   const [activeChallenges, allTimeRecord] = await Promise.all([
@@ -43,6 +50,7 @@ export default async function Home() {
       );
       daysCount = userChallenge.daysCount;
       completedPositions = userChallenge.runs.map((run) => run.position);
+      stravaUrl = userChallenge.challenge.stravaUrl;
     }
     if (user) {
       userZipCode = user.zipCode;
@@ -99,6 +107,9 @@ export default async function Home() {
               />
             </div>
             <div className="w-full md:w-52 space-y-4">
+              {stravaUrl && (
+                <StravaWidget stravaUrl={stravaUrl} />
+              )}
               {coldestRun && (
                 <ColdestRunWidget
                   temperature={coldestRun.temperature}
