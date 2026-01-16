@@ -12,6 +12,18 @@ enum Season {
   summer
 }
 
+enum FeedbackCategory {
+  bug
+  idea
+  question
+}
+
+enum FeedbackLinearStatus {
+  pending
+  created
+  failed
+}
+
 model User {
   id             String          @id @default(cuid())
   email          String          @unique
@@ -26,6 +38,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   userChallenges UserChallenge[]
+  feedbacks      Feedback[]
 }
 
 model Account {
@@ -104,4 +117,25 @@ model Run {
   updatedAt         DateTime @updatedAt
 
   userChallenge UserChallenge @relation(fields: [userChallengeId], references: [id], onDelete: Cascade)
+}
+
+model Feedback {
+  id             String              @id @default(cuid())
+  createdAt      DateTime            @default(now())
+  userId         String
+  category       FeedbackCategory
+  message        String              @db.Text
+  pagePath       String?
+  userAgent      String?
+  linearIssueId  String?
+  linearIssueUrl String?
+  linearStatus   FeedbackLinearStatus @default(pending)
+  linearError    String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([linearStatus])
+  @@index([category])
 }

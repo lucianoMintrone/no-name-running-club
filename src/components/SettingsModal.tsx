@@ -2,29 +2,20 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { updateUserUnits, updateUserZipCode } from "@/app/actions/user";
+import { updateUserZipCode } from "@/app/actions/user";
+import { FeedbackModal } from "@/components/FeedbackModal";
 
 interface SettingsModalProps {
-  currentUnits: string;
   currentZipCode?: string | null;
 }
 
-export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalProps) {
+export function SettingsModal({ currentZipCode }: SettingsModalProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [units, setUnits] = useState(currentUnits);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [zipCode, setZipCode] = useState(currentZipCode || "");
   const [isPending, startTransition] = useTransition();
   const [zipSaved, setZipSaved] = useState(false);
   const router = useRouter();
-
-  const handleToggle = () => {
-    const newUnits = units === "imperial" ? "metric" : "imperial";
-    setUnits(newUnits);
-    startTransition(async () => {
-      await updateUserUnits(newUnits);
-      router.refresh();
-    });
-  };
 
   const handleZipCodeSave = () => {
     startTransition(async () => {
@@ -37,6 +28,10 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
 
   return (
     <>
+      {isFeedbackOpen ? (
+        <FeedbackModal isOpen={true} onClose={() => setIsFeedbackOpen(false)} />
+      ) : null}
+
       <button
         onClick={() => setIsOpen(true)}
         className="cursor-pointer rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors duration-150"
@@ -160,6 +155,26 @@ export function SettingsModal({ currentUnits, currentZipCode }: SettingsModalPro
               <p className="mt-1 text-xs text-gray-500">
                 Used to auto-fill temperature based on your local weather
               </p>
+            </div>
+
+            <div className="mt-6 border-t border-nnrc-lavender pt-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-sm font-semibold text-gray-900">Feedback</div>
+                  <div className="mt-1 text-xs text-gray-500">
+                    Have an idea or found a bug? Send it in 30 seconds.
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsFeedbackOpen(true);
+                  }}
+                  className="cursor-pointer rounded-lg bg-white px-4 py-2 text-sm font-semibold text-nnrc-purple-dark shadow-sm ring-1 ring-nnrc-lavender hover:bg-nnrc-lavender-light transition-colors duration-150"
+                >
+                  Leave feedback
+                </button>
+              </div>
             </div>
           </div>
         </div>

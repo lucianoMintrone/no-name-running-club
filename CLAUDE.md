@@ -25,6 +25,7 @@ yarn db:setup-challenges # Seed challenge data
 This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQL.
 
 ### Key Directories
+
 - `src/app/` - Next.js App Router pages and API routes
 - `src/lib/prisma.ts` - Prisma client singleton (use this for all DB access)
 - `src/lib/auth.ts` - NextAuth.js config with Prisma adapter
@@ -34,20 +35,38 @@ This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQ
 - `prisma/schema.prisma` - Database schema definition
 
 ### Authentication
+
 - NextAuth.js v5 with Google OAuth provider
 - `src/services/UserService.ts` - User creation/lookup logic (extend here for onboarding flows)
 
 ### Database
+
 - **Local**: PostgreSQL at `localhost:5432/no_name_running_club`
 - **Production**: Vercel Postgres (configured via `POSTGRES_URL` env var)
 - Prisma ORM with type-safe client (import from `@prisma/client`)
 
 ### Environment Files
+
 - `.env` - Local development (not versioned)
 - `.env.production` - Production settings (not versioned)
 - `.env.example` - Template for required variables (versioned)
 
+### Key Environment Variables
+
+**Auth**
+
+- `DATABASE_URL`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `ADMIN_EMAILS` (comma-separated; auto-assign admin role on sign-in)
+
+**Feedback → Linear integration**
+
+- `LINEAR_API_KEY` (Linear Personal API Key)
+- `LINEAR_TEAM_KEY` (Linear team key, e.g. `COA`)
+
 ## Tech Stack
+
 - Next.js 16 with App Router
 - React 19
 - TypeScript

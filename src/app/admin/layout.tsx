@@ -130,6 +130,25 @@ export default async function AdminLayout({
               </svg>
               Analytics
             </Link>
+            <Link
+              href="/admin/feedback"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-nnrc-purple-dark hover:bg-nnrc-lavender-light"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 8h10M7 12h6m5 8l-4-4H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2z"
+                />
+              </svg>
+              Feedback
+            </Link>
           </nav>
         </aside>
 

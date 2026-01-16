@@ -7,7 +7,7 @@ import { ColdestRunWidget } from "@/components/ColdestRunWidget";
 import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
 import { ShareWidget } from "@/components/ShareWidget";
-import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
+import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
 import Link from "next/link";
@@ -72,7 +72,7 @@ export default async function Home() {
                   Admin
                 </Link>
               )}
-              <SettingsModal currentUnits={userUnits} currentZipCode={userZipCode} />
+              <SettingsModal currentZipCode={userZipCode} />
               {session.user.image && (
                 <img
                   src={session.user.image}
