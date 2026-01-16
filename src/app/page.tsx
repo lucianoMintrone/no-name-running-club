@@ -59,8 +59,8 @@ export default async function Home() {
             NNRC
           </span>
           {session?.user ? (
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500">
+            <div className="flex items-center gap-2 md:gap-4">
+              <span className="text-sm text-gray-500 hidden sm:block">
                 {session.user.name || session.user.email}
               </span>
               {isAdmin(session.user.role) && (
