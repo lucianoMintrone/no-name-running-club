@@ -6,6 +6,33 @@ export type SaveRunInput = {
 };
 
 export class RunService {
+  static async getRunByPosition(userId: string, position: number) {
+    const userChallenge = await prisma.userChallenge.findFirst({
+      where: {
+        userId,
+        challenge: { current: true },
+      },
+      select: { id: true },
+    });
+
+    if (!userChallenge) {
+      return null;
+    }
+
+    return prisma.run.findFirst({
+      where: {
+        userChallengeId: userChallenge.id,
+        position,
+      },
+      select: {
+        id: true,
+        temperature: true,
+        date: true,
+        position: true,
+      },
+    });
+  }
+
   static async saveRunForUser(userId: string, input: SaveRunInput) {
     const userChallenge = await prisma.userChallenge.findFirst({
       where: {

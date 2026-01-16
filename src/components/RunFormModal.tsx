@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition, useEffect } from "react";
-import { saveRun } from "@/app/actions/run";
+import { saveRun, getExistingRun } from "@/app/actions/run";
 import { getCurrentTemperature } from "@/app/actions/weather";
 import posthog from "posthog-js";
 
@@ -32,25 +32,52 @@ export function RunFormModal({
     onClose();
   };
 
-  // Fetch current temperature when modal opens
+  // Fetch existing run or current temperature when modal opens
   useEffect(() => {
     if (isOpen && !hasFetchedWeatherRef.current) {
       hasFetchedWeatherRef.current = true;
       Promise.resolve().then(() => setIsLoadingWeather(true));
-      getCurrentTemperature()
-        .then((temp) => {
-          if (temp !== null) {
-            setTemperature(String(temp));
+
+      // First check if there's an existing run for this position
+      getExistingRun(position)
+        .then((existingRun) => {
+          if (existingRun?.temperature !== null && existingRun?.temperature !== undefined) {
+            // Pre-populate with existing temperature
+            setTemperature(String(existingRun.temperature));
+            setIsLoadingWeather(false);
+          } else {
+            // No existing run, fetch current weather
+            return getCurrentTemperature()
+              .then((temp) => {
+                if (temp !== null) {
+                  setTemperature(String(temp));
+                }
+              })
+              .catch(() => {
+                // Silently fail - user can enter manually
+              })
+              .finally(() => {
+                setIsLoadingWeather(false);
+              });
           }
         })
         .catch(() => {
-          // Silently fail - user can enter manually
-        })
-        .finally(() => {
-          setIsLoadingWeather(false);
+          // If fetching existing run fails, try to get current weather
+          getCurrentTemperature()
+            .then((temp) => {
+              if (temp !== null) {
+                setTemperature(String(temp));
+              }
+            })
+            .catch(() => {
+              // Silently fail - user can enter manually
+            })
+            .finally(() => {
+              setIsLoadingWeather(false);
+            });
         });
     }
-  }, [isOpen]);
+  }, [isOpen, position]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

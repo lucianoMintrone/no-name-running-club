@@ -8,6 +8,15 @@ export interface SaveRunInput {
   position: number;
 }
 
+export async function getExistingRun(position: number) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return null;
+  }
+
+  return RunService.getRunByPosition(session.user.id, position);
+}
+
 export async function saveRun(input: SaveRunInput) {
   const session = await auth();
   if (!session?.user?.id) {
