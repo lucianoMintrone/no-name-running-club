@@ -44,7 +44,7 @@ export function ChallengeCard({
   };
 
   return (
-    <div className="mx-auto max-w-md rounded-xl bg-white p-6 shadow-card hover:shadow-card-hover transition-all duration-200">
+    <div className="mx-auto max-w-md rounded-xl bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-200">
       <div className="mb-4 text-center">
         <h2 className="mb-1 text-xl font-bold text-gray-900">
           {title}

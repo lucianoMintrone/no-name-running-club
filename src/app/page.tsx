@@ -3,12 +3,12 @@ import { SignInModal } from "@/components/SignInModal";
 import { SignOutButton } from "@/components/SignOutButton";
 import { SettingsModal } from "@/components/SettingsModal";
 import { ChallengeCard } from "@/components/ChallengeCard";
-import { ColdestRunWidget } from "@/components/ColdestRunWidget";
 import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
 import { ShareWidget } from "@/components/ShareWidget";
 import { StravaSidebarWidget } from "@/components/StravaSidebarWidget";
-import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
+import { ClubStatsSidebarWidget } from "@/components/ClubStatsSidebarWidget";
+import { ChallengeService, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord, type ParticipantRunCount } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
 import Link from "next/link";
@@ -22,23 +22,24 @@ export default async function Home() {
   let daysCount: number | null = null;
   let userZipCode: string | null = null;
   let completedPositions: number[] = [];
-  let coldestRun: ColdestRunInfo | null = null;
   let leaderboard: LeaderboardEntry[] = [];
+  let runCounts: ParticipantRunCount[] = [];
   let stravaUrl: string | null = null;
   let stravaEmbedCode: string | null = null;
   
-  // Always fetch active challenges and all-time record for public display
-  const [activeChallenges, allTimeRecord] = await Promise.all([
+  // Always fetch active challenges and all-time records for public display
+  const [activeChallenges, allTimeRecord, mostRunsAllTime] = await Promise.all([
     ChallengeService.getActiveChallengesWithLeaderboards(),
     ChallengeService.getAllTimeRecord(),
+    ChallengeService.getMostRunsAllTime(),
   ]);
   
   if (session?.user?.id) {
-    const [userChallenge, user, coldest, leaders] = await Promise.all([
+    const [userChallenge, user, leaders, counts] = await Promise.all([
       ChallengeService.getUserCurrentChallenge(session.user.id),
       UserService.findById(session.user.id),
-      ChallengeService.getColdestRun(session.user.id),
       ChallengeService.getChallengeLeaderboard(),
+      ChallengeService.getRunCountsByParticipant(),
     ]);
     if (userChallenge) {
       challengeTitle = ChallengeService.formatChallengeTitle(
@@ -52,8 +53,8 @@ export default async function Home() {
     if (user) {
       userZipCode = user.zipCode;
     }
-    coldestRun = coldest;
     leaderboard = leaders;
+    runCounts = counts;
   }
 
   return (
@@ -103,27 +104,14 @@ export default async function Home() {
                 completedPositions={completedPositions}
               />
             </div>
-            <div className="w-full md:w-52 space-y-4">
-              {coldestRun && (
-                <ColdestRunWidget
-                  temperature={coldestRun.temperature}
-                  date={coldestRun.date}
-                  runNumber={coldestRun.position}
-                />
-              )}
-              {allTimeRecord && (
-                <AllTimeRecordWidget
-                  name={allTimeRecord.name}
-                  temperature={allTimeRecord.temperature}
-                  image={allTimeRecord.image}
-                />
-              )}
-              {leaderboard.length > 0 && (
-                <LeaderboardWidget entries={leaderboard} />
-              )}
-            </div>
-            {/* Strava pop-out sidebar */}
+            {/* Stacked sidebar widgets on the right */}
             <StravaSidebarWidget stravaUrl={stravaUrl} stravaEmbedCode={stravaEmbedCode} />
+            <ClubStatsSidebarWidget 
+              allTimeRecord={allTimeRecord} 
+              leaderboard={leaderboard} 
+              runCounts={runCounts}
+              mostRunsAllTime={mostRunsAllTime}
+            />
           </div>
         ) : (
           <>

@@ -224,4 +224,78 @@ describe("ChallengeService", () => {
       });
     });
   });
+
+  describe("getRunCountsByParticipant", () => {
+    it("should return empty array when no current challenge exists", async () => {
+      prismaMock.challenge.findFirst.mockResolvedValue(null);
+
+      const result = await ChallengeService.getRunCountsByParticipant();
+
+      expect(result).toEqual([]);
+    });
+
+    it("should return run counts sorted by count descending", async () => {
+      prismaMock.challenge.findFirst.mockResolvedValue(mockChallenge);
+      prismaMock.userChallenge.findMany.mockResolvedValue([
+        {
+          id: "uc-1",
+          userId: "user-1",
+          challengeId: "challenge-123",
+          daysCount: 30,
+          user: { name: "Alice Smith", image: "alice.jpg" },
+          runs: [{ id: "run-1" }, { id: "run-2" }, { id: "run-3" }],
+        },
+        {
+          id: "uc-2",
+          userId: "user-2",
+          challengeId: "challenge-123",
+          daysCount: 30,
+          user: { name: "Bob Jones", image: "bob.jpg" },
+          runs: [{ id: "run-4" }],
+        },
+        {
+          id: "uc-3",
+          userId: "user-3",
+          challengeId: "challenge-123",
+          daysCount: 30,
+          user: { name: null, image: null },
+          runs: [{ id: "run-5" }, { id: "run-6" }],
+        },
+      ] as unknown as never);
+
+      const result = await ChallengeService.getRunCountsByParticipant();
+
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual({ firstName: "Alice", runCount: 3, image: "alice.jpg" });
+      expect(result[1]).toEqual({ firstName: "Anonymous", runCount: 2, image: null });
+      expect(result[2]).toEqual({ firstName: "Bob", runCount: 1, image: "bob.jpg" });
+    });
+
+    it("should filter out users with no runs", async () => {
+      prismaMock.challenge.findFirst.mockResolvedValue(mockChallenge);
+      prismaMock.userChallenge.findMany.mockResolvedValue([
+        {
+          id: "uc-1",
+          userId: "user-1",
+          challengeId: "challenge-123",
+          daysCount: 30,
+          user: { name: "Active Runner", image: "active.jpg" },
+          runs: [{ id: "run-1" }],
+        },
+        {
+          id: "uc-2",
+          userId: "user-2",
+          challengeId: "challenge-123",
+          daysCount: 30,
+          user: { name: "Inactive User", image: "inactive.jpg" },
+          runs: [],
+        },
+      ] as unknown as never);
+
+      const result = await ChallengeService.getRunCountsByParticipant();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].firstName).toBe("Active");
+    });
+  });
 });

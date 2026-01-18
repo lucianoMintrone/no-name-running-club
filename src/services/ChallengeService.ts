@@ -31,6 +31,12 @@ export interface AllTimeRecord {
   image?: string | null;
 }
 
+export interface ParticipantRunCount {
+  firstName: string;
+  runCount: number;
+  image?: string | null;
+}
+
 export interface ActiveChallengeWithLeaderboard {
   id: string;
   title: string;
@@ -314,5 +320,96 @@ export class ChallengeService {
       challengeTitle: this.formatChallengeTitle(coldestRun.userChallenge.challenge),
       image: coldestRun.userChallenge.user.image,
     };
+  }
+
+  /**
+   * Gets the total run count by participant for the current challenge.
+   */
+  static async getRunCountsByParticipant(): Promise<ParticipantRunCount[]> {
+    const currentChallenge = await prisma.challenge.findFirst({
+      where: { current: true },
+    });
+
+    if (!currentChallenge) {
+      return [];
+    }
+
+    // Get all runs for the current challenge grouped by user
+    const userChallenges = await prisma.userChallenge.findMany({
+      where: {
+        challengeId: currentChallenge.id,
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+        runs: true,
+      },
+    });
+
+    const runCounts: ParticipantRunCount[] = userChallenges
+      .filter((uc) => uc.runs.length > 0)
+      .map((uc) => ({
+        firstName: this.firstNameFromFullName(uc.user.name),
+        runCount: uc.runs.length,
+        image: uc.user.image,
+      }))
+      .sort((a, b) => b.runCount - a.runCount);
+
+    return runCounts;
+  }
+
+  /**
+   * Gets the all-time record for most runs in a single challenge.
+   */
+  static async getMostRunsAllTime(): Promise<{
+    name: string;
+    runCount: number;
+    challengeTitle: string;
+    image?: string | null;
+  } | null> {
+    // Get all user challenges with their runs and challenge info
+    const userChallenges = await prisma.userChallenge.findMany({
+      include: {
+        user: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+        challenge: true,
+        runs: true,
+      },
+    });
+
+    if (userChallenges.length === 0) {
+      return null;
+    }
+
+    // Find the user challenge with the most runs
+    let maxRuns = 0;
+    let record: {
+      name: string;
+      runCount: number;
+      challengeTitle: string;
+      image?: string | null;
+    } | null = null;
+
+    for (const uc of userChallenges) {
+      if (uc.runs.length > maxRuns) {
+        maxRuns = uc.runs.length;
+        record = {
+          name: uc.user.name || "Anonymous",
+          runCount: uc.runs.length,
+          challengeTitle: this.formatChallengeTitle(uc.challenge),
+          image: uc.user.image,
+        };
+      }
+    }
+
+    return record;
   }
 }

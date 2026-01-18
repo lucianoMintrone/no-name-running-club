@@ -16,18 +16,23 @@ export function StravaSidebarWidget({ stravaUrl, stravaEmbedCode }: StravaSideba
 
   return (
     <>
-      {/* Floating Strava button */}
+      {/* Floating Strava button with tag */}
       {!open && (
-        <button
-          aria-label="Open Strava sidebar"
-          className="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-[#FC4C02] shadow-lg hover:bg-[#e04a00] transition-colors"
-          onClick={() => setOpen(true)}
-        >
-          {/* Strava logo SVG */}
-          <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-white" aria-hidden="true">
-            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" fill="currentColor" />
-          </svg>
-        </button>
+        <div className="fixed top-1/2 translate-y-4 right-8 z-50 flex items-center gap-3">
+          <span className="px-3 py-1.5 bg-white/90 backdrop-blur-sm text-gray-700 text-sm font-medium rounded-full shadow-md">
+            View Club Activity
+          </span>
+          <button
+            aria-label="Open Strava sidebar"
+            className="flex items-center justify-center w-14 h-14 rounded-full bg-[#FC4C02] shadow-lg hover:bg-[#e04a00] transition-colors"
+            onClick={() => setOpen(true)}
+          >
+            {/* Strava logo SVG */}
+            <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8 text-white" aria-hidden="true">
+              <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
       )}
 
       {/* Sidebar overlay */}
