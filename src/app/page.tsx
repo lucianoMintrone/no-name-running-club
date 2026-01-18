@@ -7,7 +7,7 @@ import { ColdestRunWidget } from "@/components/ColdestRunWidget";
 import { LeaderboardWidget } from "@/components/LeaderboardWidget";
 import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
 import { ShareWidget } from "@/components/ShareWidget";
-import { StravaWidget } from "@/components/StravaWidget";
+import { StravaSidebarWidget } from "@/components/StravaSidebarWidget";
 import { ChallengeService, type ColdestRunInfo, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
@@ -104,9 +104,6 @@ export default async function Home() {
               />
             </div>
             <div className="w-full md:w-52 space-y-4">
-              {stravaUrl && (
-                <StravaWidget stravaUrl={stravaUrl} />
-              )}
               {coldestRun && (
                 <ColdestRunWidget
                   temperature={coldestRun.temperature}
@@ -125,6 +122,8 @@ export default async function Home() {
                 <LeaderboardWidget entries={leaderboard} />
               )}
             </div>
+            {/* Strava pop-out sidebar */}
+            <StravaSidebarWidget stravaUrl={stravaUrl} stravaEmbedCode={stravaEmbedCode} />
           </div>
         ) : (
           <>
