@@ -43,6 +43,19 @@ export interface ActiveChallengeWithLeaderboard {
   leaderboard: LeaderboardEntry[];
 }
 
+export interface PastChallengeStats {
+  coldestRunWinner: {
+    firstName: string;
+    temperature: number;
+    image?: string | null;
+  } | null;
+  runCountStandings: ParticipantRunCount[];
+  userColdestRun: {
+    temperature: number;
+    position: number;
+  } | null;
+}
+
 export class ChallengeService {
   private static firstNameFromFullName(fullName: string | null): string {
     const safe = (fullName || "Anonymous").trim();
@@ -360,6 +373,123 @@ export class ChallengeService {
       .sort((a, b) => b.runCount - a.runCount);
 
     return runCounts;
+  }
+
+  /**
+   * Gets a user's past (non-current) challenges with their runs.
+   */
+  static async getUserPastChallenges(
+    userId: string
+  ): Promise<UserChallengeWithChallengeAndRuns[]> {
+    return prisma.userChallenge.findMany({
+      where: {
+        userId,
+        challenge: {
+          current: false,
+        },
+      },
+      include: {
+        challenge: true,
+        runs: true,
+      },
+      orderBy: {
+        challenge: {
+          createdAt: "desc",
+        },
+      },
+    });
+  }
+
+  /**
+   * Gets stats for a specific challenge: coldest run winner, run count standings, and user's coldest run.
+   */
+  static async getChallengeStats(
+    challengeId: string,
+    userId: string
+  ): Promise<PastChallengeStats> {
+    // Get all user challenges for this challenge with runs
+    const userChallenges = await prisma.userChallenge.findMany({
+      where: {
+        challengeId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        runs: {
+          orderBy: {
+            temperature: "asc",
+          },
+        },
+      },
+    });
+
+    // Find coldest run winner (across all participants)
+    let coldestRunWinner: PastChallengeStats["coldestRunWinner"] = null;
+    let coldestTemp = Infinity;
+
+    for (const uc of userChallenges) {
+      const coldestRun = uc.runs.find((r) => r.temperature !== null);
+      if (coldestRun && coldestRun.temperature !== null && coldestRun.temperature < coldestTemp) {
+        coldestTemp = coldestRun.temperature;
+        coldestRunWinner = {
+          firstName: this.firstNameFromFullName(uc.user.name),
+          temperature: coldestRun.temperature,
+          image: uc.user.image,
+        };
+      }
+    }
+
+    // Build run count standings (sorted by most runs)
+    const runCountStandings: ParticipantRunCount[] = userChallenges
+      .filter((uc) => uc.runs.length > 0)
+      .map((uc) => ({
+        firstName: this.firstNameFromFullName(uc.user.name),
+        runCount: uc.runs.length,
+        image: uc.user.image,
+      }))
+      .sort((a, b) => b.runCount - a.runCount);
+
+    // Find current user's coldest run
+    let userColdestRun: PastChallengeStats["userColdestRun"] = null;
+    const userChallenge = userChallenges.find((uc) => uc.user.id === userId);
+    if (userChallenge) {
+      const coldestRun = userChallenge.runs.find((r) => r.temperature !== null);
+      if (coldestRun && coldestRun.temperature !== null) {
+        userColdestRun = {
+          temperature: coldestRun.temperature,
+          position: coldestRun.position,
+        };
+      }
+    }
+
+    return {
+      coldestRunWinner,
+      runCountStandings,
+      userColdestRun,
+    };
+  }
+
+  /**
+   * Formats the challenge date range based on season and year.
+   * e.g., "Dec 2025 - Feb 2026" for winter or "Jun - Aug 2026" for summer
+   */
+  static formatChallengeDateRange(challenge: Challenge): string {
+    const year = challenge.year;
+    if (challenge.season === "winter") {
+      // Winter spans two years, e.g., "2025/2026"
+      const [startYear, endYear] = year.includes("/")
+        ? year.split("/")
+        : [year, String(parseInt(year) + 1)];
+      return `Dec ${startYear} - Feb ${endYear}`;
+    } else {
+      // Summer is within one year
+      return `Jun - Aug ${year}`;
+    }
   }
 
   /**

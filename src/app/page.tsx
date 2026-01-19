@@ -8,7 +8,8 @@ import { AllTimeRecordWidget } from "@/components/AllTimeRecordWidget";
 import { ShareWidget } from "@/components/ShareWidget";
 import { StravaSidebarWidget } from "@/components/StravaSidebarWidget";
 import { ClubStatsSidebarWidget } from "@/components/ClubStatsSidebarWidget";
-import { ChallengeService, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord, type ParticipantRunCount } from "@/services/ChallengeService";
+import { PastChallengesSection } from "@/components/PastChallengesSection";
+import { ChallengeService, type LeaderboardEntry, type ActiveChallengeWithLeaderboard, type AllTimeRecord, type ParticipantRunCount, type PastChallengeStats } from "@/services/ChallengeService";
 import { UserService } from "@/services/UserService";
 import { isAdmin } from "@/lib/admin";
 import Link from "next/link";
@@ -26,6 +27,14 @@ export default async function Home() {
   let runCounts: ParticipantRunCount[] = [];
   let stravaUrl: string | null = null;
   let stravaEmbedCode: string | null = null;
+  let pastChallenges: {
+    id: string;
+    title: string;
+    dateRange: string;
+    daysCount: number;
+    completedPositions: number[];
+    stats: PastChallengeStats;
+  }[] = [];
   
   // Always fetch active challenges and all-time records for public display
   const [activeChallenges, allTimeRecord, mostRunsAllTime] = await Promise.all([
@@ -35,11 +44,12 @@ export default async function Home() {
   ]);
   
   if (session?.user?.id) {
-    const [userChallenge, user, leaders, counts] = await Promise.all([
+    const [userChallenge, user, leaders, counts, userPastChallenges] = await Promise.all([
       ChallengeService.getUserCurrentChallenge(session.user.id),
       UserService.findById(session.user.id),
       ChallengeService.getChallengeLeaderboard(),
       ChallengeService.getRunCountsByParticipant(),
+      ChallengeService.getUserPastChallenges(session.user.id),
     ]);
     if (userChallenge) {
       challengeTitle = ChallengeService.formatChallengeTitle(
@@ -55,6 +65,23 @@ export default async function Home() {
     }
     leaderboard = leaders;
     runCounts = counts;
+    
+    // Fetch stats for each past challenge
+    const pastChallengeStats = await Promise.all(
+      userPastChallenges.map((uc) =>
+        ChallengeService.getChallengeStats(uc.challenge.id, session.user!.id!)
+      )
+    );
+    
+    // Format past challenges for display with stats
+    pastChallenges = userPastChallenges.map((uc, index) => ({
+      id: uc.id,
+      title: ChallengeService.formatChallengeTitle(uc.challenge),
+      dateRange: ChallengeService.formatChallengeDateRange(uc.challenge),
+      daysCount: uc.daysCount,
+      completedPositions: uc.runs.map((run) => run.position),
+      stats: pastChallengeStats[index],
+    }));
   }
 
   return (
@@ -103,6 +130,7 @@ export default async function Home() {
                 daysCount={daysCount}
                 completedPositions={completedPositions}
               />
+              <PastChallengesSection challenges={pastChallenges} />
             </div>
             {/* Stacked sidebar widgets on the right */}
             <StravaSidebarWidget stravaUrl={stravaUrl} stravaEmbedCode={stravaEmbedCode} />

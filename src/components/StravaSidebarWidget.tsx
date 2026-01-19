@@ -37,7 +37,7 @@ export function StravaSidebarWidget({ stravaUrl, stravaEmbedCode }: StravaSideba
 
       {/* Sidebar overlay */}
       {open && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-[60] flex">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
