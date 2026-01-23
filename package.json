@@ -29,6 +29,7 @@
     "@auth/prisma-adapter": "^2.11.1",
     "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.19.1",
+    "@prisma/extension-accelerate": "1",
     "@vercel/postgres": "^0.10.0",
     "dotenv": "^17.2.3",
     "next": "16.1.1",
