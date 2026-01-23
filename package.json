@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
@@ -22,6 +22,7 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
+    "deploy": "DEPLOY_ENV=production prisma migrate deploy && vercel --prod",
     "db:setup-challenges": "npx tsx scripts/setup-challenges.ts",
     "make-admin": "npx tsx scripts/make-admin.ts"
   },

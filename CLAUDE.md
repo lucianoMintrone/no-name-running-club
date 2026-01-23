@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 yarn dev               # Start development server
-yarn build             # Build for production (runs migrations + prisma generate)
+yarn build             # Build for production (prisma generate + next build)
+yarn deploy            # Run production migrations + deploy to Vercel
 yarn lint              # Run ESLint
 yarn db:migrate        # Create and apply migrations (development)
 yarn db:migrate:deploy # Apply pending migrations (production)
@@ -42,8 +43,9 @@ This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQ
 ### Database
 
 - **Local**: PostgreSQL at `localhost:5432/no_name_running_club`
-- **Production**: Vercel Postgres (configured via `POSTGRES_URL` env var)
-- Prisma ORM with type-safe client (import from `@prisma/client`)
+- **Production**: Prisma Postgres with Accelerate (connection pooling proxy)
+- Prisma ORM with Accelerate extension (`@prisma/extension-accelerate`)
+- Schema uses `PRISMA_DATABASE_URL` (runtime) and `DATABASE_URL` (migrations via `directUrl`)
 
 ### Environment Files
 
@@ -53,9 +55,13 @@ This is a Next.js 16 app using the App Router, deployed on Vercel with PostgreSQ
 
 ### Key Environment Variables
 
+**Database**
+
+- `DATABASE_URL` (direct PostgreSQL connection; used for migrations)
+- `PRISMA_DATABASE_URL` (Accelerate URL for production; same as `DATABASE_URL` locally)
+
 **Auth**
 
-- `DATABASE_URL`
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
 - `ADMIN_EMAILS` (comma-separated; auto-assign admin role on sign-in)

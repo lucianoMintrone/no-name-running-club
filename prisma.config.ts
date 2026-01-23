@@ -5,8 +5,9 @@ import { defineConfig } from "prisma/config";
 const isVercel = process.env.VERCEL === "1";
 
 if (!isVercel) {
+  const envFile = process.env.DEPLOY_ENV === "production" ? ".env.production" : ".env";
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require("dotenv").config();
+  require("dotenv").config({ path: envFile });
 }
 
 export default defineConfig({

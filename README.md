@@ -27,7 +27,7 @@ View and edit your database with a visual GUI:
 yarn db:studio
 
 # Production database
-DATABASE_URL="your_production_connection_string" yarn db:studio
+DEPLOY_ENV=production yarn db:studio
 ```
 
 This opens Prisma Studio at [http://localhost:5555](http://localhost:5555).
@@ -41,16 +41,17 @@ yarn db:studio          # Open Prisma Studio GUI
 yarn db:generate        # Regenerate Prisma client
 
 # Production
-yarn db:migrate:deploy  # Apply pending migrations (safe for CI/CD)
+yarn deploy             # Run migrations + deploy to Vercel
+yarn db:migrate:deploy  # Apply pending migrations only
 ```
 
 ### Production Migration Workflow
 
-Migrations run automatically on every Vercel deploy (via the build script).
+Migrations are applied before deploy via the `yarn deploy` command (not during the Vercel build, as the direct database endpoint is not reachable from Vercel's build containers).
 
 1. Create migrations locally with `yarn db:migrate`
 2. Commit the migration files in `prisma/migrations/`
-3. Push to deploy — migrations apply automatically during build
+3. Deploy with `yarn deploy` — runs migrations against production, then deploys
 
 ## Learn More
 
@@ -67,47 +68,36 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 - A [Vercel account](https://vercel.com/signup)
 - Vercel CLI installed: `npm i -g vercel`
+- A Prisma Postgres database (via [Prisma Data Platform](https://console.prisma.io/))
 
 ### Setup Steps
 
-1. **Create a Vercel Postgres database**
-
-   - Go to your Vercel dashboard → Storage → Create Database → Postgres
-   - Copy the connection string
-
-2. **Configure environment variables**
+1. **Configure environment variables**
 
    In your Vercel project settings (Settings → Environment Variables), add:
 
    ```
-   POSTGRES_URL=your_vercel_postgres_connection_string
+   PRISMA_DATABASE_URL=prisma+postgres://accelerate.prisma-data.net/?api_key=...
+   DATABASE_URL=postgres://...@db.prisma.io:5432/postgres?sslmode=require
    ```
 
-3. **Deploy**
+   Also create a local `.env.production` file with the same variables.
+
+2. **Deploy**
 
    ```bash
    # Link your project (first time only)
    vercel link
 
-   # Deploy to preview
-   vercel
-
-   # Deploy to production
-   vercel --prod
-   ```
-
-4. **Push database schema**
-
-   After deployment, push the Prisma schema to your production database:
-
-   ```bash
-   DATABASE_URL="your_vercel_postgres_connection_string" yarn db:push
+   # Deploy to production (runs migrations first)
+   yarn deploy
    ```
 
 ### Environment Variables Reference
 
-| Variable       | Description                       | Required |
-| -------------- | --------------------------------- | -------- |
-| `POSTGRES_URL` | Vercel Postgres connection string | Yes      |
+| Variable              | Description                                          | Required |
+| --------------------- | ---------------------------------------------------- | -------- |
+| `PRISMA_DATABASE_URL` | Prisma Accelerate URL (runtime connection)           | Yes      |
+| `DATABASE_URL`        | Direct PostgreSQL URL (migrations via `directUrl`)   | Yes      |
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
